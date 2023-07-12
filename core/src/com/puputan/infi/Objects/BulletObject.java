@@ -6,20 +6,22 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.puputan.infi.Configurations.AssetsRepository;
 import com.puputan.infi.Utils.CollisionsDetector;
 import com.puputan.infi.Utils.MovementUtils;
 import lombok.Getter;
 
 @Getter
-public class BulletObject extends BaseObject implements GameObjectInterface{
+public class BulletObject extends BaseObject {
 
-    private final Sprite sprite;
+    private final Texture texture = AssetsRepository.bulletTexture;
+
     private Vector2 position;
-    private Vector2 direction;
+    private final Sprite sprite;
     private final float velocity = 600;
     private final Rectangle boundingRectangle;
 
-    public BulletObject(Texture texture, ShootingPointObject shootingPointObject){
+    public BulletObject(ShootingPointObject shootingPointObject){
         this.sprite = new Sprite(texture);
         this.boundingRectangle = this.sprite.getBoundingRectangle();
         this.scaleSize(0.2f, this.getSprite());
@@ -28,10 +30,15 @@ public class BulletObject extends BaseObject implements GameObjectInterface{
     }
 
     @Override
-    public void update(SpriteBatch batch){
+    public void update(){
         this.position.y = MovementUtils.moveVertical(this.position, true, velocity);
         this.sprite.setPosition(position.x, position.y);
-        this.sprite.draw(batch);
+        super.draw(this.sprite);
+    }
+
+    @Override
+    public void onCollisionDetection() {
+
     }
 
     public void collisionHandler(Sprite sprite, String tag){

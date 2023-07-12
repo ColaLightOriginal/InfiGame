@@ -12,26 +12,28 @@ import com.puputan.infi.Objects.PlayerObject;
 import com.puputan.infi.Processors.GameInputProcessor;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Objects;
 
 public class InfiGame extends ApplicationAdapter {
 
 	public final static float WIDTH = 1920;
 	public final static float HEIGHT = 1080;
-
+	public static SpriteBatch spriteBatch;
 	private GameInputProcessor gameInputProcessor;
 	public static ArrayList<BulletObject> bulletsList;
-	private SpriteBatch batch;
 	private OrthographicCamera camera;
 	private PlayerObject playerObject;
 	private EnemyObject enemyObject;
+	public LinkedList<Objects> actualObjects = new LinkedList<>();
 
 	@Override
 	public void create () {
-		batch = new SpriteBatch();
+		spriteBatch = new SpriteBatch();
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, WIDTH, HEIGHT);
-		playerObject = new PlayerObject(0,Gdx.graphics.getHeight(), AssetsRepository.playerTexture);
-		enemyObject = new EnemyObject(AssetsRepository.enemyTexture);
+		playerObject = new PlayerObject();
+		enemyObject = new EnemyObject();
 
 		bulletsList = new ArrayList<>();
 
@@ -41,25 +43,25 @@ public class InfiGame extends ApplicationAdapter {
 
 	@Override
 	public void render () {
-		ScreenUtils.clear(0, 0, 0, 1);
+		ScreenUtils.clear(256, 256, 256, 1);
 		camera.update();
-		batch.setProjectionMatrix(camera.combined);
-		batch.begin();
-		playerObject.update(batch);
-		enemyObject.update(batch);
+		spriteBatch.setProjectionMatrix(camera.combined);
+		spriteBatch.begin();
+		playerObject.update();
+		enemyObject.update();
 
 		for (BulletObject bullet: bulletsList) {
 			if(bullet.isObjectOutOfCamera(bullet.getSprite())) {
 				bullet=null;
 				continue;
 			}
-			bullet.update(batch);
+			bullet.update();
 		}
-		batch.end();
+		spriteBatch.end();
 	}
 	
 	@Override
 	public void dispose () {
-		batch.dispose();
+		spriteBatch.dispose();
 	}
 }

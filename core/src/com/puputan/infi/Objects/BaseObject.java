@@ -1,10 +1,20 @@
 package com.puputan.infi.Objects;
 
-import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Rectangle;
 import com.puputan.infi.InfiGame;
 
-public class BaseObject extends InputAdapter {
+import java.awt.*;
+
+public abstract class BaseObject {
+
+    public abstract void update();
+    public abstract void onCollisionDetection();
+
+    public void draw(Sprite sprite){
+        sprite.draw(InfiGame.spriteBatch);
+    };
 
     public void scaleSize(float scaleValue, Sprite sprite){
         sprite.setSize(sprite.getWidth()*scaleValue, sprite.getHeight()*scaleValue);

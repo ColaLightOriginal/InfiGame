@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.puputan.infi.Configurations.AssetsRepository;
+import com.puputan.infi.Utils.CollisionsDetector;
 import com.puputan.infi.Utils.MouseUtils;
 import com.puputan.infi.Utils.MovementUtils;
 import lombok.Getter;
@@ -13,19 +15,18 @@ import lombok.Getter;
 import java.util.ArrayList;
 
 @Getter
-public class PlayerObject extends BaseObject implements GameObjectInterface{
+public class PlayerObject extends BaseObject {
 
     private final float PLAYER_BORDER_HEIGHT_VALUE = 0.25f;
+    private final Texture texture = AssetsRepository.playerTexture;
 
-    private final Texture texture;
     private final Sprite sprite;
     private final float borderHeightPosition;
     private final ArrayList<ShootingPointObject> shootingPointObjectsList;
     private final Rectangle boundingRectangle;
 
-    public PlayerObject(float x, float y, Texture texture) {
-        this.texture = texture;
-        this.sprite = new Sprite(texture);
+    public PlayerObject() {
+        this.sprite = new Sprite(this.texture);
         this.boundingRectangle = this.sprite.getBoundingRectangle();
 
         scaleSize(0.5f, this.sprite);
@@ -36,9 +37,14 @@ public class PlayerObject extends BaseObject implements GameObjectInterface{
     }
 
     @Override
-    public void update(SpriteBatch batch){
+    public void update(){
         positionToMousePosition();
-        sprite.draw(batch);
+        super.draw(this.sprite);
+    }
+
+    @Override
+    public void onCollisionDetection() {
+
     }
 
     public void positionToMousePosition(){
@@ -67,10 +73,8 @@ public class PlayerObject extends BaseObject implements GameObjectInterface{
         ArrayList<BulletObject> bulletsList = new ArrayList<>();
         for (ShootingPointObject shootingPoint : this.shootingPointObjectsList) {
             shootingPoint.updatePosition(this);
-            bulletsList.add(new BulletObject(bulletTexture, shootingPoint));
+            bulletsList.add(new BulletObject(shootingPoint));
         }
         return bulletsList;
     }
-
-
 }

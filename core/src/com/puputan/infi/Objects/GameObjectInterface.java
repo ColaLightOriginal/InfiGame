@@ -1,8 +1,10 @@
 package com.puputan.infi.Objects;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public interface GameObjectInterface {
 
-    public void update(SpriteBatch spriteBatch);
+    void update();
+    void draw(SpriteBatch spriteBatch);
 }

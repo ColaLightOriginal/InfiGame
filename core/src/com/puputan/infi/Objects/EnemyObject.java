@@ -6,18 +6,20 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.puputan.infi.Configurations.AssetsRepository;
 import com.puputan.infi.InfiGame;
 import com.puputan.infi.Utils.MovementUtils;
 
-public class EnemyObject extends BaseObject implements GameObjectInterface {
+public class EnemyObject extends BaseObject {
 
+    private final Texture texture = AssetsRepository.enemyTexture;
     private final Sprite sprite;
     private final Vector2 position;
     private final float velocity = 150;
     private final Rectangle boundingRectangle;
 
-    public EnemyObject(Texture texture){
-        this.sprite = new Sprite(texture);
+    public EnemyObject(){
+        this.sprite = new Sprite(this.texture);
         this.boundingRectangle = this.sprite.getBoundingRectangle();
         scaleSize(0.2f, this.sprite);
         this.position = new Vector2(InfiGame.WIDTH/2-this.sprite.getWidth()/2, InfiGame.HEIGHT);
@@ -25,9 +27,14 @@ public class EnemyObject extends BaseObject implements GameObjectInterface {
     }
 
     @Override
-    public void update(SpriteBatch spriteBatch) {
+    public void update() {
         this.position.y = MovementUtils.moveVertical(this.position, false, velocity);
         this.sprite.setY(position.y);
-        this.sprite.draw(spriteBatch);
+        super.draw(this.sprite);
+    }
+
+    @Override
+    public void onCollisionDetection() {
+
     }
 }
