@@ -17,7 +17,7 @@ public class ShootingPointObject {
     };
 
     private Vector2 setPosition(PlayerObject playerObject){
-        return new Vector2(playerObject.getSprite().getX() + playerObject.getSprite().getWidth()/2,
-                playerObject.getSprite().getY() + playerObject.getSprite().getHeight() + 1);
+        return new Vector2(playerObject.getX() + playerObject.getWidth()/2,
+                playerObject.getY() + playerObject.getHeight() + 1);
     }
 }

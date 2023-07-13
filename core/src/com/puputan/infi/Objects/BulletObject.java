@@ -1,47 +1,40 @@
 package com.puputan.infi.Objects;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.puputan.infi.Configurations.AssetsRepository;
-import com.puputan.infi.Utils.CollisionsDetector;
+import com.puputan.infi.InfiGame;
+import com.puputan.infi.Utils.BodyUtils;
 import com.puputan.infi.Utils.MovementUtils;
 import lombok.Getter;
 
 @Getter
 public class BulletObject extends BaseObject {
 
-    private final Texture texture = AssetsRepository.bulletTexture;
-
-    private Vector2 position;
-    private final Sprite sprite;
+    private final String tag = "Bullet";
     private final float velocity = 600;
-    private final Rectangle boundingRectangle;
+    private Body body;
 
     public BulletObject(ShootingPointObject shootingPointObject){
-        this.sprite = new Sprite(texture);
-        this.boundingRectangle = this.sprite.getBoundingRectangle();
-        this.scaleSize(0.2f, this.getSprite());
-        this.position = new Vector2(shootingPointObject.getPosition().x - this.sprite.getWidth()/2, shootingPointObject.getPosition().y);
-        this.sprite.setPosition(position.x, position.y);
+        super(AssetsRepository.bulletTexture);
+        InfiGame.stage.addActor(this);
+        this.body = BodyUtils.defineBody(BodyDef.BodyType.DynamicBody, new Vector2(this.getX(), this.getY()));
+        this.body.setUserData(this);
+
+        this.setSize(this.getWidth()*0.1f, this.getHeight()*0.1f);
+        this.setPosition(shootingPointObject.getPosition().x - this.getWidth()/2, shootingPointObject.getPosition().y);
+    }
+
+    public void act(float delta){
+        this.setY(MovementUtils.moveVertical(new Vector2(this.getX(), this.getY()), true, velocity));
+        this.body.setTransform(this.getX(), this.getY(), 0);
     }
 
     @Override
-    public void update(){
-        this.position.y = MovementUtils.moveVertical(this.position, true, velocity);
-        this.sprite.setPosition(position.x, position.y);
-        super.draw(this.sprite);
-    }
-
-    @Override
-    public void onCollisionDetection() {
-
-    }
-
-    public void collisionHandler(Sprite sprite, String tag){
-        
+    public void onCollision(Fixture fixture) {
+        System.out.println("Bullet colilded");
     }
 }
