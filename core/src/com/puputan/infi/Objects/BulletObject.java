@@ -1,10 +1,10 @@
 package com.puputan.infi.Objects;
 
+import Screens.GameScreen;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.puputan.infi.Configurations.AssetsRepository;
 import com.puputan.infi.InfiGame;
 import com.puputan.infi.Utils.BodyUtils;
@@ -20,7 +20,7 @@ public class BulletObject extends BaseObject {
 
     public BulletObject(ShootingPointObject shootingPointObject){
         super(AssetsRepository.bulletTexture);
-        InfiGame.stage.addActor(this);
+        GameScreen.stage.addActor(this);
         this.body = BodyUtils.defineBody(BodyDef.BodyType.DynamicBody, new Vector2(this.getX(), this.getY()));
         this.body.setUserData(this);
 
@@ -35,6 +35,7 @@ public class BulletObject extends BaseObject {
 
     @Override
     public void onCollision(Fixture fixture) {
-        System.out.println("Bullet colilded");
+        Object object = fixture.getBody().getUserData();
+        if(object instanceof EnemyObject) this.addToDispose(this.body);
     }
 }

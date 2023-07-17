@@ -1,35 +1,30 @@
-package com.puputan.infi.Objects;
+package com.puputan.infi.Objects.Player;
 
+import Screens.GameScreen;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.utils.Scaling;
 import com.puputan.infi.Configurations.AssetsRepository;
-import com.puputan.infi.InfiGame;
+import com.puputan.infi.Objects.*;
 import com.puputan.infi.Utils.BodyUtils;
 import com.puputan.infi.Utils.MouseUtils;
 import com.puputan.infi.Utils.MovementUtils;
 import lombok.Getter;
-
-import java.awt.*;
-import java.util.ArrayList;
 
 @Getter
 public class PlayerObject extends BaseObject {
 
     private final float PLAYER_BORDER_HEIGHT_VALUE = 0.35f;
     private final float borderHeightPosition;
-    private final String tag = "Player";
-    private final ArrayList<ShootingPointObject> shootingPointObjectsList;
     private final Body body;
+
+    private final String tag = "Player";
+    private final PlayerFuctions playerFuctions;
 
     public PlayerObject() {
         super(AssetsRepository.playerTexture);
-        InfiGame.stage.addActor(this);
+        GameScreen.stage.addActor(this);
         this.setSize(this.getWidth()*0.25f, this.getHeight()*0.25f);
 
         this.body = BodyUtils.defineBody(BodyDef.BodyType.DynamicBody,
@@ -37,8 +32,8 @@ public class PlayerObject extends BaseObject {
         this.body.setUserData(this);
 
         this.borderHeightPosition = Gdx.graphics.getHeight()*0.25f;
-        this.shootingPointObjectsList = new ArrayList<>();
-        this.shootingPointObjectsList.add(new ShootingPointObject(this));
+
+        this.playerFuctions = new PlayerFuctions(this);
     }
 
     public void act(float delta){
@@ -66,17 +61,14 @@ public class PlayerObject extends BaseObject {
         return resultVector;
     }
 
-    public ArrayList<BulletObject> shoot(Texture bulletTexture){
-        ArrayList<BulletObject> bulletsList = new ArrayList<>();
-        for (ShootingPointObject shootingPoint : this.shootingPointObjectsList) {
-            shootingPoint.updatePosition(this);
-            bulletsList.add(new BulletObject(shootingPoint));
-        }
-        return bulletsList;
-    }
 
     @Override
     public void onCollision(Fixture fixture) {
-        System.out.println("Player collided");
+        Object object = fixture.getBody().getUserData();
+        if(object instanceof EnemyObject){
+            this.playerFuctions.hit();
+        }else if(object instanceof ExperiencePointObject){
+            this.playerFuctions.gainExp();
+        }
     }
 }

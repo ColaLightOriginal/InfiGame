@@ -14,9 +14,9 @@ public class ContactListener implements com.badlogic.gdx.physics.box2d.ContactLi
         Fixture fixtureB = contact.getFixtureB();
 
         BaseObject boA = (BaseObject) fixtureA.getBody().getUserData();
-        boA.onCollision(fixtureA);
+        boA.onCollision(fixtureB);
         BaseObject boB = (BaseObject) fixtureB.getBody().getUserData();
-        boB.onCollision(fixtureB);
+        boB.onCollision(fixtureA);
     }
 
     @Override
