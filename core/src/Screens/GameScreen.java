@@ -7,12 +7,15 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.puputan.infi.InfiGame;
 import com.puputan.infi.Listeners.ContactListener;
 import com.puputan.infi.Objects.*;
+import com.puputan.infi.Objects.Enemy.EnemyObject;
+import com.puputan.infi.Objects.Enemy.EnemySpawner;
 import com.puputan.infi.Objects.Player.PlayerObject;
 
 import java.util.ArrayList;
@@ -27,9 +30,9 @@ public class GameScreen implements Screen {
     private Box2DDebugRenderer debugRenderer;
     public static ArrayList<BulletObject> bulletsList;
     private OrthographicCamera camera;
-
     public static LinkedList<Body> bodiesToDestroy;
-    public static LinkedList<Body> bodiesToCreate;
+    public static PlayerObject playerObject;
+    public static EnemySpawner enemySpawner;
 
     private final InfiGame game;
     public GameScreen(InfiGame game){
@@ -45,8 +48,8 @@ public class GameScreen implements Screen {
 
         debugRenderer = new Box2DDebugRenderer();
 
-        PlayerObject playerObject = new PlayerObject();
-        EnemyObject enemyObject = new EnemyObject();
+        playerObject = new PlayerObject();
+        enemySpawner = new EnemySpawner();
 
         bulletsList = new ArrayList<>();
 
@@ -68,12 +71,10 @@ public class GameScreen implements Screen {
         debugRenderer.render(world, camera.combined);
         world.step(1/60f, 6, 2);
         clearBodies();
-
     }
 
     @Override
     public void resize(int width, int height) {
-
     }
 
     @Override
@@ -93,7 +94,6 @@ public class GameScreen implements Screen {
 
     @Override
     public void dispose() {
-
     }
 
     public void clearBodies(){
@@ -102,18 +102,9 @@ public class GameScreen implements Screen {
                 EnemyObject eo = (EnemyObject) body.getUserData();
                 eo.onDestroy();
             }
-            disposeObject(body);
+            body.getFixtureList().clear();
+            world.destroyBody(body);
         }
         bodiesToDestroy.clear();
-    }
-
-    public void createObjects(){
-    }
-
-    public void disposeObject(Body body){
-        body.getFixtureList().clear();
-        BaseObject bo = (BaseObject) body.getUserData();
-        bo.remove();
-        world.destroyBody(body);
     }
 }

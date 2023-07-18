@@ -7,6 +7,7 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.puputan.infi.Configurations.AssetsRepository;
 import com.puputan.infi.Objects.*;
+import com.puputan.infi.Objects.Enemy.EnemyObject;
 import com.puputan.infi.Utils.BodyUtils;
 import com.puputan.infi.Utils.MouseUtils;
 import com.puputan.infi.Utils.MovementUtils;

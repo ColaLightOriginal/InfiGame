@@ -18,7 +18,7 @@ public class ExperiencePointObject extends BaseObject {
     public ExperiencePointObject(Vector2 position) {
         super(AssetsRepository.expTexture);
         GameScreen.stage.addActor(this);
-        body = BodyUtils.defineBody(BodyDef.BodyType.DynamicBody, position);
+        this.body = BodyUtils.defineBody(BodyDef.BodyType.DynamicBody, position);
         this.body.setUserData(this);
         this.setPosition(position.x, position.y);
         this.body.setTransform(position.x, position.y, 0);
@@ -27,8 +27,13 @@ public class ExperiencePointObject extends BaseObject {
 
     @Override
     public void act(float delta) {
+        validateOutPosition();
         this.setY(MovementUtils.moveVertical(new Vector2(this.getX(), this.getY()), false, velocity));
         this.body.setTransform(this.getX(), this.getY(), 0);
+    }
+
+    public void validateOutPosition(){
+        if(this.getY() > GameScreen.HEIGHT + this.getHeight()) this.addToDispose(this.body);
     }
 
     @Override

@@ -7,6 +7,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.utils.compression.lzma.Base;
 import com.puputan.infi.InfiGame;
 
 public abstract class BaseObject extends Image {
@@ -30,6 +31,8 @@ public abstract class BaseObject extends Image {
     }
 
     public void addToDispose(Body body){
+        BaseObject bo = (BaseObject) body.getUserData();
+        bo.remove();
         GameScreen.bodiesToDestroy.add(body);
     }
 
