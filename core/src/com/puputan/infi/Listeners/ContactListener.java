@@ -21,7 +21,6 @@ public class ContactListener implements com.badlogic.gdx.physics.box2d.ContactLi
 
     @Override
     public void endContact(Contact contact) {
-
     }
 
     @Override

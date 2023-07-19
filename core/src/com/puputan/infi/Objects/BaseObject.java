@@ -8,12 +8,24 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.compression.lzma.Base;
-import com.puputan.infi.InfiGame;
+import com.puputan.infi.Utils.BodyUtils;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
 public abstract class BaseObject extends Image {
+
+    @Setter
+    private boolean isAddedToDispose;
+    private Body body;
 
     public BaseObject(Texture texture){
         super(texture);
+        GameScreen.stage.addActor(this);
+        this.setSize(this.getWidth()*0.25f, this.getHeight()*0.25f);
+        body = BodyUtils.defineBody(BodyDef.BodyType.DynamicBody, this);
+        body.setUserData(this);
+        isAddedToDispose = false;
     }
 
     public abstract void onCollision(Fixture fixture);
@@ -22,11 +34,11 @@ public abstract class BaseObject extends Image {
         sprite.setSize(sprite.getWidth()*scaleValue, sprite.getHeight()*scaleValue);
     }
 
-    public boolean isObjectOutOfCamera(Sprite sprite){
-        if(sprite.getX() > GameScreen.WIDTH) return true;
-        else if(sprite.getX() + sprite.getWidth() < 0) return true;
-        else if(sprite.getY() > GameScreen.HEIGHT) return true;
-        else if(sprite.getY() + sprite.getHeight() < 0) return true;
+    public boolean isObjectOutOfCamera(BaseObject bo){
+        if(bo.getX() > GameScreen.WIDTH) return true;
+        else if(bo.getX() + bo.getWidth() < 0) return true;
+        else if(bo.getY() > GameScreen.HEIGHT) return true;
+        else if(bo.getY() + bo.getHeight() < 0) return true;
         return false;
     }
 

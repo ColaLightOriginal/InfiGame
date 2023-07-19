@@ -9,8 +9,10 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.puputan.infi.Configurations.AssetsRepository;
 import com.puputan.infi.InfiGame;
 import com.puputan.infi.Listeners.ContactListener;
 import com.puputan.infi.Objects.*;
@@ -30,7 +32,7 @@ public class GameScreen implements Screen {
     private Box2DDebugRenderer debugRenderer;
     public static ArrayList<BulletObject> bulletsList;
     private OrthographicCamera camera;
-    public static LinkedList<Body> bodiesToDestroy;
+    public static Array<Body> bodiesToDestroy;
     public static PlayerObject playerObject;
     public static EnemySpawner enemySpawner;
 
@@ -44,7 +46,7 @@ public class GameScreen implements Screen {
         world = new World(new Vector2(0,0), true);
         ContactListener contactListener = new ContactListener();
         world.setContactListener(contactListener);
-        bodiesToDestroy = new LinkedList<>();
+        bodiesToDestroy = new Array<>();
 
         debugRenderer = new Box2DDebugRenderer();
 
@@ -89,14 +91,15 @@ public class GameScreen implements Screen {
 
     @Override
     public void hide() {
-
     }
 
     @Override
     public void dispose() {
+        AssetsRepository.disposeAssets();
     }
 
     public void clearBodies(){
+        if(bodiesToDestroy.size == 0) return;
         for (Body body: bodiesToDestroy) {
             if(body.getUserData() instanceof EnemyObject) {
                 EnemyObject eo = (EnemyObject) body.getUserData();
@@ -104,6 +107,7 @@ public class GameScreen implements Screen {
             }
             body.getFixtureList().clear();
             world.destroyBody(body);
+            body = null;
         }
         bodiesToDestroy.clear();
     }

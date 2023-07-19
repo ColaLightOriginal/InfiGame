@@ -5,6 +5,9 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.TimeUtils;
+import com.puputan.infi.Objects.BaseObject;
+
+import java.awt.*;
 
 public class MovementUtils {
 
@@ -38,5 +41,9 @@ public class MovementUtils {
         actualPosition.y -= velocity * Gdx.graphics.getDeltaTime();
 
         return actualPosition;
+    }
+
+    public static float getDistanceBetweenObjects(BaseObject objectA, BaseObject objectB){
+        return (float) (Math.pow(objectB.getX() - objectA.getX(),2) + Math.pow(objectB.getY() - objectA.getY(),2));
     }
 }

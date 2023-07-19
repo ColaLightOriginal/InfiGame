@@ -18,23 +18,17 @@ import com.puputan.infi.Utils.MovementUtils;
 public class EnemyObject extends BaseObject {
 
     private int hp = 1;
-    private final String tag = "Enemy";
     private final float velocity = 150;
-    private final Body body;
     private EnemyType enemyType;
-    private Vector2 initialPosition;
+    private boolean addedToDispose;
 
     public EnemyObject(EnemyType enemyType, Vector2 position){
         super(AssetsRepository.enemyTexture);
         GameScreen.stage.addActor(this);
         this.enemyType = enemyType;
-        this.initialPosition = position;
-        body = BodyUtils.defineBody(BodyDef.BodyType.DynamicBody, new Vector2(this.initialPosition.x,
-                this.initialPosition.y));
-        body.setUserData(this);
 
-        this.setPosition(initialPosition.x, initialPosition.y);
-        this.setSize(this.getWidth()*0.25f, this.getHeight()*0.25f);
+        this.setPosition(position.x, position.y);
+        this.getBody().setTransform(this.getX(), this.getY(),0);
     }
 
     public void act(float delta) {
@@ -56,13 +50,14 @@ public class EnemyObject extends BaseObject {
                 this.setPosition(newPosition.x, newPosition.y);
                 break;
         }
-        this.body.setTransform(this.getX(), this.getY(), 0);
+        this.getBody().setTransform(this.getX(), this.getY(), 0);
     }
 
     public void hit(){
         this.hp--;
-        if(this.hp <= 0){
-            this.addToDispose(this.body);
+        if(this.hp <= 0 && !this.addedToDispose){
+            this.addedToDispose = true;
+            this.addToDispose(this.getBody());
         }
     }
 
@@ -75,7 +70,10 @@ public class EnemyObject extends BaseObject {
     }
 
     public void validateOutPosition(){
-        if(this.getY() < 0 - this.getHeight()) this.addToDispose(this.body);
+        if(this.getY() < 0 - this.getHeight() && !this.addedToDispose) {
+            this.addedToDispose = true;
+            this.addToDispose(this.getBody());
+        }
     }
 
     public void onDestroy(){

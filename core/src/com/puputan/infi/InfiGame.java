@@ -22,8 +22,6 @@ import java.util.Objects;
 
 public class InfiGame extends Game {
 
-
-
 	@Override
 	public void create () {
 		this.setScreen(new GameScreen(this));
@@ -33,8 +31,6 @@ public class InfiGame extends Game {
 	public void render () {
 		super.render();
 	}
-
-
 
 	@Override
 	public void dispose () {

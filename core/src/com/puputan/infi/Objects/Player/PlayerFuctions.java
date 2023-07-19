@@ -60,7 +60,8 @@ public class PlayerFuctions {
 
     public void hit(){
         this.hp--;
-        if(this.hp<=0) {
+        if(this.hp<=0 && !this.playerObject.isAddedToDispose()) {
+            this.playerObject.setAddedToDispose(true);
             this.playerObject.addToDispose(this.playerObject.getBody());
             Gdx.app.exit();
         }

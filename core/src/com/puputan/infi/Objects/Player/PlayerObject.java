@@ -12,34 +12,27 @@ import com.puputan.infi.Utils.BodyUtils;
 import com.puputan.infi.Utils.MouseUtils;
 import com.puputan.infi.Utils.MovementUtils;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 public class PlayerObject extends BaseObject {
 
     private final float PLAYER_BORDER_HEIGHT_VALUE = 0.35f;
     private final float borderHeightPosition;
-    private final Body body;
 
-    private final String tag = "Player";
     private final PlayerFuctions playerFuctions;
 
     public PlayerObject() {
         super(AssetsRepository.playerTexture);
-        GameScreen.stage.addActor(this);
-        this.setSize(this.getWidth()*0.25f, this.getHeight()*0.25f);
 
-        this.body = BodyUtils.defineBody(BodyDef.BodyType.DynamicBody,
-                new Vector2(this.getX() , this.getY()+this.getImageHeight()/2));
-        this.body.setUserData(this);
-
+        this.setPosition(GameScreen.WIDTH/2, GameScreen.HEIGHT*0.1f);
         this.borderHeightPosition = Gdx.graphics.getHeight()*0.25f;
-
         this.playerFuctions = new PlayerFuctions(this);
     }
 
     public void act(float delta){
         positionToMousePosition();
-        this.body.setTransform(this.getX() + this.getImageWidth()/2, this.getY() + + this.getImageHeight()/2, 0);
+        this.getBody().setTransform(this.getX() + this.getImageWidth()/2, this.getY() + + this.getImageHeight()/2, 0);
     }
 
     public void positionToMousePosition(){
@@ -61,7 +54,6 @@ public class PlayerObject extends BaseObject {
         if(mousePosition.x > Gdx.graphics.getWidth()) resultVector.x = Gdx.graphics.getWidth() - image.getWidth()/2;
         return resultVector;
     }
-
 
     @Override
     public void onCollision(Fixture fixture) {
