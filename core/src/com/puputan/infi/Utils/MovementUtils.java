@@ -44,6 +44,6 @@ public class MovementUtils {
     }
 
     public static float getDistanceBetweenObjects(BaseObject objectA, BaseObject objectB){
-        return (float) (Math.pow(objectB.getX() - objectA.getX(),2) + Math.pow(objectB.getY() - objectA.getY(),2));
+        return (float) Math.sqrt (Math.pow(objectB.getX() - objectA.getX(),2) + Math.pow(objectB.getY() - objectA.getY(),2));
     }
 }

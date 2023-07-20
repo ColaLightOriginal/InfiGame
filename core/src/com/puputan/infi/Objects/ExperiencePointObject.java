@@ -16,6 +16,7 @@ public class ExperiencePointObject extends BaseObject {
 
     private float velocity = 75;
     private boolean isAddedToDispose;
+    private boolean isMovingToPlayer;
 
     public ExperiencePointObject(Vector2 position) {
         super(AssetsRepository.expTexture);
@@ -23,15 +24,18 @@ public class ExperiencePointObject extends BaseObject {
 
         this.setPosition(position.x, position.y);
         this.getBody().setTransform(this.getY(), this.getY(), 0);
+
+        this.isMovingToPlayer = false;
     }
 
     @Override
     public void act(float delta) {
         validateOutPosition();
-        if(MovementUtils.getDistanceBetweenObjects(this, GameScreen.playerObject) < 200000f){
+        if(MovementUtils.getDistanceBetweenObjects(this, GameScreen.playerObject) < 300f || this.isMovingToPlayer){
+            this.isMovingToPlayer = true;
             Vector2 newPosition;
             newPosition = MovementUtils.moveTowardsPoint(new Vector2(this.getX(), this.getY()),
-                    new Vector2(GameScreen.playerObject.getX(), GameScreen.playerObject.getY()), this.velocity + 100f);
+                    new Vector2(GameScreen.playerObject.getX(), GameScreen.playerObject.getY()), this.velocity + 200f);
             this.setPosition(newPosition.x, newPosition.y);
         }
         else this.setY(MovementUtils.moveVertical(new Vector2(this.getX(), this.getY()), false, velocity));

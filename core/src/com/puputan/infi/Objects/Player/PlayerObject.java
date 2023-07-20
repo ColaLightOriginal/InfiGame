@@ -3,16 +3,15 @@ package com.puputan.infi.Objects.Player;
 import Screens.GameScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.puputan.infi.Configurations.AssetsRepository;
-import com.puputan.infi.Objects.*;
+import com.puputan.infi.Objects.BaseObject;
 import com.puputan.infi.Objects.Enemy.EnemyObject;
-import com.puputan.infi.Utils.BodyUtils;
+import com.puputan.infi.Objects.ExperiencePointObject;
 import com.puputan.infi.Utils.MouseUtils;
 import com.puputan.infi.Utils.MovementUtils;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
 public class PlayerObject extends BaseObject {
@@ -32,7 +31,7 @@ public class PlayerObject extends BaseObject {
 
     public void act(float delta){
         positionToMousePosition();
-        this.getBody().setTransform(this.getX() + this.getImageWidth()/2, this.getY() + + this.getImageHeight()/2, 0);
+        this.getBody().setTransform(this.getX(), this.getY(), 0);
     }
 
     public void positionToMousePosition(){

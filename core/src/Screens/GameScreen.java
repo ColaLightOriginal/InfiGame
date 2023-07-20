@@ -7,7 +7,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -15,13 +14,12 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.puputan.infi.Configurations.AssetsRepository;
 import com.puputan.infi.InfiGame;
 import com.puputan.infi.Listeners.ContactListener;
-import com.puputan.infi.Objects.*;
+import com.puputan.infi.Objects.Bullet.BulletObject;
 import com.puputan.infi.Objects.Enemy.EnemyObject;
 import com.puputan.infi.Objects.Enemy.EnemySpawner;
 import com.puputan.infi.Objects.Player.PlayerObject;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 public class GameScreen implements Screen {
 

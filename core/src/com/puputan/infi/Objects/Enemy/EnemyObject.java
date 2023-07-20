@@ -1,18 +1,13 @@
 package com.puputan.infi.Objects.Enemy;
 
 import Screens.GameScreen;
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.puputan.infi.Configurations.AssetsRepository;
-import com.puputan.infi.InfiGame;
 import com.puputan.infi.Objects.BaseObject;
-import com.puputan.infi.Objects.BulletObject;
+import com.puputan.infi.Objects.Bullet.BulletObject;
 import com.puputan.infi.Objects.ExperiencePointObject;
 import com.puputan.infi.Objects.Player.PlayerObject;
-import com.puputan.infi.Utils.BodyUtils;
 import com.puputan.infi.Utils.MovementUtils;
 
 public class EnemyObject extends BaseObject {
