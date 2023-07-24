@@ -32,7 +32,7 @@ public class GameInputProcessor implements InputProcessor {
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         switch (button){
             case Input.Buttons.LEFT:
-                GameScreen.bulletsList.addAll(this.playerObject.getPlayerFuctions().shoot());
+                this.playerObject.getPlayerFuctions().shoot();
         }
         return false;
     }

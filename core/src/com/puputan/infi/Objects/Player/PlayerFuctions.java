@@ -1,7 +1,11 @@
 package com.puputan.infi.Objects.Player;
 
+import Screens.GameScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.puputan.infi.Objects.Enemy.EnemyObject;
+import com.puputan.infi.Tools.RaycastCallbackImpl;
 import com.puputan.infi.Objects.Bullet.BulletObject;
 import com.puputan.infi.Objects.Bullet.ShootingPointType;
 import com.puputan.infi.Objects.ShootingPointObject;
@@ -14,17 +18,18 @@ public class PlayerFuctions {
 
     private PlayerObject playerObject;
 
-    private int hp = 10;
+    private int hp = 3;
     private int experience = 0;
     private int level = 0;
     private final HashMap<Integer, Long> experienceLevels = new HashMap<>();
-    private final Map<ShootingPointObject, ShootingPointType> shootingPointObjectsList;
+    private final Map<ShootingPointType,ShootingPointObject> shootingPointObjectsList;
     private ArrayList<Vector2> shootingPointsList;
-
+    private boolean isRayCastShooting;
 
     public PlayerFuctions(PlayerObject playerObject){
         this.playerObject = playerObject;
         this.shootingPointObjectsList = new HashMap<>();
+        this.isRayCastShooting = true;
         initializeLevels();
         initializeShootingPoints();
     }
@@ -41,21 +46,41 @@ public class PlayerFuctions {
     public void initializeShootingPoints(){
         this.shootingPointsList = new ArrayList<>();
         this.shootingPointsList.add(new Vector2(this.playerObject.getWidth()/2, this.playerObject.getHeight() + 1));
-        this.shootingPointObjectsList.put(new ShootingPointObject(this.shootingPointsList.get(0),this.playerObject), ShootingPointType.MIDDLE);
+        this.shootingPointObjectsList.put(ShootingPointType.MIDDLE, new ShootingPointObject(this.shootingPointsList.get(0),this.playerObject));
     }
 
     public void upgradeShootingPoints(){
         this.shootingPointsList.add(new Vector2(0.1f*this.playerObject.getWidth(),  this.playerObject.getHeight() + 1));
         this.shootingPointsList.add(new Vector2(0.9f*this.playerObject.getWidth(), this.playerObject.getHeight() + 1));
-        this.shootingPointObjectsList.put(new ShootingPointObject(this.shootingPointsList.get(1),this.playerObject), ShootingPointType.LEFT );
-        this.shootingPointObjectsList.put(new ShootingPointObject(this.shootingPointsList.get(2),this.playerObject), ShootingPointType.RIGHT);
+        this.shootingPointObjectsList.put(ShootingPointType.LEFT, new ShootingPointObject(this.shootingPointsList.get(1),this.playerObject));
+        this.shootingPointObjectsList.put(ShootingPointType.RIGHT, new ShootingPointObject(this.shootingPointsList.get(2),this.playerObject));
     }
 
-    public ArrayList<BulletObject> shoot(){
+    public void shootRaycast(){
+        RaycastCallbackImpl rayCastCallback = new RaycastCallbackImpl();
+        ShootingPointObject shootingPoint =  this.shootingPointObjectsList.get(ShootingPointType.MIDDLE);
+        shootingPoint.updatePosition(this.playerObject);
+        Vector2 shootingPointPosition = shootingPoint.getPosition();
+
+        GameScreen.world.rayCast(rayCastCallback,shootingPointPosition.x, shootingPointPosition.y,
+                shootingPointPosition.x, GameScreen.HEIGHT);
+        if(rayCastCallback.getReturnFixture() != null) {
+            EnemyObject enemyObject = (EnemyObject) rayCastCallback.getReturnFixture().getBody().getUserData();
+            enemyObject.hit();
+        }
+    }
+
+    public void shoot(){
+        if(!isRayCastShooting){
+            GameScreen.bulletsList.addAll(shootBullet());
+        } else shootRaycast();
+    }
+
+    public ArrayList<BulletObject> shootBullet(){
         ArrayList<BulletObject> bulletsList = new ArrayList<>();
-        for (Map.Entry<ShootingPointObject, ShootingPointType> shootingPoint : this.shootingPointObjectsList.entrySet()){
-            shootingPoint.getKey().updatePosition(shootingPoint.getKey().getOffset(), this.playerObject);
-            bulletsList.add(new BulletObject(shootingPoint.getKey(), shootingPoint.getValue()));
+        for (Map.Entry<ShootingPointType, ShootingPointObject> shootingPoint : this.shootingPointObjectsList.entrySet()){
+            shootingPoint.getValue().updatePosition(this.playerObject);
+            bulletsList.add(new BulletObject(shootingPoint.getValue(), shootingPoint.getKey()));
         }
         return bulletsList;
     }

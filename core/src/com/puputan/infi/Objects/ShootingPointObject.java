@@ -14,8 +14,8 @@ public class ShootingPointObject {
         this.offset = offset;
         setPosition(offset, playerObject);
     }
-    public void updatePosition(Vector2 offset, PlayerObject playerObject){
-        this.position = setPosition(offset, playerObject);
+    public void updatePosition(PlayerObject playerObject){
+        this.position = setPosition(this.offset, playerObject);
     }
 
     private Vector2 setPosition(Vector2 offset, PlayerObject playerObject){

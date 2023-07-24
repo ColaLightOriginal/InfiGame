@@ -13,7 +13,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.puputan.infi.Configurations.AssetsRepository;
 import com.puputan.infi.InfiGame;
-import com.puputan.infi.Listeners.ContactListener;
+import com.puputan.infi.Tools.ContactListener;
 import com.puputan.infi.Objects.Bullet.BulletObject;
 import com.puputan.infi.Objects.Enemy.EnemyObject;
 import com.puputan.infi.Objects.Enemy.EnemySpawner;
