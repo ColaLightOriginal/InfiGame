@@ -1,5 +1,4 @@
 package com.puputan.infi.Processors;
-import Screens.GameScreen;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.puputan.infi.Objects.Player.PlayerObject;
@@ -32,7 +31,7 @@ public class GameInputProcessor implements InputProcessor {
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         switch (button){
             case Input.Buttons.LEFT:
-                this.playerObject.getPlayerFuctions().shoot();
+                this.playerObject.getPlayerSystems().shoot();
         }
         return false;
     }

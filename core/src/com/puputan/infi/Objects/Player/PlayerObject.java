@@ -19,14 +19,14 @@ public class PlayerObject extends BaseObject {
     private final float PLAYER_BORDER_HEIGHT_VALUE = 0.35f;
     private final float borderHeightPosition;
 
-    private final PlayerFuctions playerFuctions;
+    private final PlayerSystems playerSystems;
 
     public PlayerObject() {
         super(AssetsRepository.playerTexture);
 
         this.setPosition(GameScreen.WIDTH/2, GameScreen.HEIGHT*0.1f);
         this.borderHeightPosition = Gdx.graphics.getHeight()*0.25f;
-        this.playerFuctions = new PlayerFuctions(this);
+        this.playerSystems = new PlayerSystems(this);
     }
 
     public void act(float delta){
@@ -58,9 +58,9 @@ public class PlayerObject extends BaseObject {
     public void onCollision(Fixture fixture) {
         Object object = fixture.getBody().getUserData();
         if(object instanceof EnemyObject){
-            this.playerFuctions.hit();
+            this.playerSystems.hit();
         }else if(object instanceof ExperiencePointObject){
-            this.playerFuctions.gainExp();
+            this.playerSystems.gainExp();
         }
     }
 }

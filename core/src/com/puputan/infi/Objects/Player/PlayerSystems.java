@@ -3,7 +3,6 @@ package com.puputan.infi.Objects.Player;
 import Screens.GameScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Fixture;
 import com.puputan.infi.Objects.Enemy.EnemyObject;
 import com.puputan.infi.Tools.RaycastCallbackImpl;
 import com.puputan.infi.Objects.Bullet.BulletObject;
@@ -14,7 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PlayerFuctions {
+public class PlayerSystems {
 
     private PlayerObject playerObject;
 
@@ -26,7 +25,7 @@ public class PlayerFuctions {
     private ArrayList<Vector2> shootingPointsList;
     private boolean isRayCastShooting;
 
-    public PlayerFuctions(PlayerObject playerObject){
+    public PlayerSystems(PlayerObject playerObject){
         this.playerObject = playerObject;
         this.shootingPointObjectsList = new HashMap<>();
         this.isRayCastShooting = true;
@@ -56,7 +55,7 @@ public class PlayerFuctions {
         this.shootingPointObjectsList.put(ShootingPointType.RIGHT, new ShootingPointObject(this.shootingPointsList.get(2),this.playerObject));
     }
 
-    public void shootRaycast(){
+    public void shootRayCast(){
         RaycastCallbackImpl rayCastCallback = new RaycastCallbackImpl();
         ShootingPointObject shootingPoint =  this.shootingPointObjectsList.get(ShootingPointType.MIDDLE);
         shootingPoint.updatePosition(this.playerObject);
@@ -73,7 +72,7 @@ public class PlayerFuctions {
     public void shoot(){
         if(!isRayCastShooting){
             GameScreen.bulletsList.addAll(shootBullet());
-        } else shootRaycast();
+        } else shootRayCast();
     }
 
     public ArrayList<BulletObject> shootBullet(){
