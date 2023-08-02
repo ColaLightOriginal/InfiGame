@@ -18,6 +18,8 @@ import com.puputan.infi.Objects.Bullet.BulletObject;
 import com.puputan.infi.Objects.Enemy.EnemyObject;
 import com.puputan.infi.Objects.Enemy.EnemySpawner;
 import com.puputan.infi.Objects.Player.PlayerObject;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 
@@ -35,7 +37,11 @@ public class GameScreen implements Screen {
     public static EnemySpawner enemySpawner;
 
     private final InfiGame game;
+
+    private GameStates gameStates;
+
     public GameScreen(InfiGame game){
+
         this.game = game;
         camera = new OrthographicCamera();
         camera.setToOrtho(false, WIDTH, HEIGHT);
@@ -44,6 +50,7 @@ public class GameScreen implements Screen {
         world = new World(new Vector2(0,0), true);
         ContactListener contactListener = new ContactListener();
         world.setContactListener(contactListener);
+
         bodiesToDestroy = new Array<>();
 
         debugRenderer = new Box2DDebugRenderer();
@@ -53,7 +60,10 @@ public class GameScreen implements Screen {
 
         bulletsList = new ArrayList<>();
 
-        com.puputan.infi.Processors.GameInputProcessor gameInputProcessor = new com.puputan.infi.Processors.GameInputProcessor(playerObject);
+        this.gameStates=GameStates.Running;
+
+        com.puputan.infi.Processors.GameInputProcessor gameInputProcessor =
+                new com.puputan.infi.Processors.GameInputProcessor(playerObject, this);
         Gdx.input.setInputProcessor(gameInputProcessor);
     }
 
@@ -63,14 +73,21 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        ScreenUtils.clear(0, 0, 0, 1);
+        switch (this.gameStates){
+            case Running:
+                ScreenUtils.clear(0, 0, 0, 1);
 
-        stage.act(Gdx.graphics.getDeltaTime());
-        stage.draw();
+                stage.act(Gdx.graphics.getDeltaTime());
+                stage.draw();
 
-        debugRenderer.render(world, camera.combined);
-        world.step(1/60f, 6, 2);
-        clearBodies();
+                debugRenderer.render(world, camera.combined);
+                world.step(1/60f, 6, 2);
+                clearBodies();
+                break;
+            case Paused:
+                ScreenUtils.clear(0, 0, 0, 1);
+                break;
+        }
     }
 
     @Override
@@ -79,7 +96,9 @@ public class GameScreen implements Screen {
 
     @Override
     public void pause() {
-
+        if(this.gameStates == GameStates.Running)
+            this.gameStates = GameStates.Paused;
+        else this.gameStates = GameStates.Running;
     }
 
     @Override

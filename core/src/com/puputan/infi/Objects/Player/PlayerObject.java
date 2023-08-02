@@ -12,11 +12,14 @@ import com.puputan.infi.Objects.ExperiencePointObject;
 import com.puputan.infi.Utils.MouseUtils;
 import com.puputan.infi.Utils.MovementUtils;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 public class PlayerObject extends BaseObject {
 
     private final float PLAYER_BORDER_HEIGHT_VALUE = 0.35f;
+    @Setter
+    private float VELOCITY = 600;
     private final float borderHeightPosition;
 
     private final PlayerSystems playerSystems;
@@ -39,7 +42,7 @@ public class PlayerObject extends BaseObject {
         Vector2 resultPosition;
 
         Vector2 actualPosition = new Vector2(this.getX(), this.getY());
-        resultPosition = MovementUtils.moveTowardsPoint(actualPosition, targetPosition, 600);
+        resultPosition = MovementUtils.moveTowardsPoint(actualPosition, targetPosition, this.VELOCITY);
         this.setPosition(resultPosition.x, resultPosition.y);
     }
 

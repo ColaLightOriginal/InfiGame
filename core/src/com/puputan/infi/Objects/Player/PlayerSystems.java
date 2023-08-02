@@ -9,9 +9,7 @@ import com.puputan.infi.Objects.Bullet.BulletObject;
 import com.puputan.infi.Objects.Bullet.ShootingPointType;
 import com.puputan.infi.Objects.ShootingPointObject;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class PlayerSystems {
 
@@ -23,23 +21,36 @@ public class PlayerSystems {
     private final HashMap<Integer, Long> experienceLevels = new HashMap<>();
     private final Map<ShootingPointType,ShootingPointObject> shootingPointObjectsList;
     private ArrayList<Vector2> shootingPointsList;
+    private LinkedList<PowerUpsEnum> possiblePowerUps;
+    private LinkedList<PowerUpsEnum> actualPowerUps;
     private boolean isRayCastShooting;
+    private Random PRNG = new Random();
 
     public PlayerSystems(PlayerObject playerObject){
         this.playerObject = playerObject;
         this.shootingPointObjectsList = new HashMap<>();
-        this.isRayCastShooting = true;
+        this.isRayCastShooting = false;
+        this.actualPowerUps = new LinkedList<>();
+        this.possiblePowerUps = new LinkedList<>();
+
         initializeLevels();
         initializeShootingPoints();
+        initializePowerUps();
     }
 
     public void initializeLevels(){
         this.experienceLevels.put(0, 0L);
         this.experienceLevels.put(1, 100L);
-        this.experienceLevels.put(2, 1000L);
-        this.experienceLevels.put(3, 2000L);
-        this.experienceLevels.put(4, 3500L);
-        this.experienceLevels.put(5, 7000L);
+        this.experienceLevels.put(2, 200L);
+        this.experienceLevels.put(3, 300L);
+        this.experienceLevels.put(4, 400L);
+        this.experienceLevels.put(5, 500L);
+    }
+
+    public void initializePowerUps(){
+        actualPowerUps.add(PowerUpsEnum.Bullets);
+        possiblePowerUps.addAll(Arrays.asList(PowerUpsEnum.values()));
+        possiblePowerUps.remove(PowerUpsEnum.Bullets);
     }
 
     public void initializeShootingPoints(){
@@ -70,7 +81,7 @@ public class PlayerSystems {
     }
 
     public void shoot(){
-        if(!isRayCastShooting){
+        if(actualPowerUps.stream().anyMatch(powerUp -> powerUp == PowerUpsEnum.Bullets)){
             GameScreen.bulletsList.addAll(shootBullet());
         } else shootRayCast();
     }
@@ -94,6 +105,7 @@ public class PlayerSystems {
     }
 
     public void gainExp(){
+        if(this.level >= this.experienceLevels.get(this.experienceLevels.size()-1)) return;
         this.experience += 100;
         this.checkLevel();
     }
@@ -105,6 +117,65 @@ public class PlayerSystems {
 
     private void levelUp(){
         this.level++;
-        this.upgradeShootingPoints();
+        rollUpgrade();
+    }
+
+    private void rollUpgrade(){
+        LinkedList<PowerUpsEnum> tmpPowerUpsList = new LinkedList<>(possiblePowerUps);
+        PowerUpsEnum powerUpsEnum;
+
+        for(int i =0; i < 3; i++) {
+            powerUpsEnum = getRandomPowerUp(tmpPowerUpsList);
+            tmpPowerUpsList = validatePowerUp(tmpPowerUpsList, powerUpsEnum);
+        }
+
+        System.out.println(tmpPowerUpsList);
+        this.activatePowerUp(tmpPowerUpsList.get(0));
+    }
+
+    private LinkedList<PowerUpsEnum> validatePowerUp(LinkedList<PowerUpsEnum> powerUpsList, PowerUpsEnum powerUp){
+        switch (powerUp){
+            case RayCast:
+                possiblePowerUps.remove(powerUp);
+                break;
+            case SpeedUp:
+                if(this.playerObject.getVELOCITY() >= 1000) powerUpsList.remove(PowerUpsEnum.SpeedUp);
+                break;
+            case Bullets:
+                powerUpsList.remove(PowerUpsEnum.Bullets);
+                powerUpsList.add(PowerUpsEnum.RayCast);
+                break;
+            case ShootingPointsUpgrade:
+                powerUpsList.remove(PowerUpsEnum.ShootingPointsUpgrade);
+        }
+        return powerUpsList;
+    }
+
+    private void activatePowerUp(PowerUpsEnum powerUp){
+        switch (powerUp){
+            case RayCast:
+                actualPowerUps.add(powerUp);
+                possiblePowerUps.remove(powerUp);
+                break;
+            case SpeedUp:
+                this.playerObject.setVELOCITY(this.playerObject.getVELOCITY()+100);
+                if(this.playerObject.getVELOCITY() >= 1000) this.possiblePowerUps.remove(PowerUpsEnum.SpeedUp);
+                break;
+            case Bullets:
+                actualPowerUps.add(PowerUpsEnum.Bullets);
+                actualPowerUps.remove(PowerUpsEnum.RayCast);
+                possiblePowerUps.remove(PowerUpsEnum.Bullets);
+                possiblePowerUps.add(PowerUpsEnum.RayCast);
+                break;
+            case ShootingPointsUpgrade:
+                this.upgradeShootingPoints();
+                this.actualPowerUps.add(PowerUpsEnum.ShootingPointsUpgrade);
+                this.possiblePowerUps.remove(PowerUpsEnum.ShootingPointsUpgrade);
+        }
+    }
+
+    private PowerUpsEnum getRandomPowerUp(LinkedList<PowerUpsEnum> powerUpsList){
+        int index = PRNG.nextInt(powerUpsList.size());
+        return powerUpsList.get(index);
     }
 }

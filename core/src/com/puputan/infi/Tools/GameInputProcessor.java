@@ -1,18 +1,28 @@
 package com.puputan.infi.Processors;
+import Screens.GameScreen;
+import Screens.GameStates;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.Screen;
 import com.puputan.infi.Objects.Player.PlayerObject;
 
 public class GameInputProcessor implements InputProcessor {
 
     private final PlayerObject playerObject;
+    private final GameScreen screen;
 
-    public GameInputProcessor(PlayerObject playerObject){
+    public GameInputProcessor(PlayerObject playerObject, GameScreen screen) {
         this.playerObject = playerObject;
+        this.screen = screen;
     }
 
     @Override
     public boolean keyDown(int keycode) {
+        switch (keycode){
+            case Input.Keys.ESCAPE:
+                this.screen.pause();
+                return true;
+        }
         return false;
     }
 
@@ -32,6 +42,7 @@ public class GameInputProcessor implements InputProcessor {
         switch (button){
             case Input.Buttons.LEFT:
                 this.playerObject.getPlayerSystems().shoot();
+                return true;
         }
         return false;
     }
