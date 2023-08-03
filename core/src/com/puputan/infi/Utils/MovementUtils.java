@@ -46,4 +46,8 @@ public class MovementUtils {
     public static float getDistanceBetweenObjects(BaseObject objectA, BaseObject objectB){
         return (float) Math.sqrt (Math.pow(objectB.getX() - objectA.getX(),2) + Math.pow(objectB.getY() - objectA.getY(),2));
     }
+
+    public static float dashToDirection(Vector2 actualPosition, Vector2 mousePosition, float distance){
+        return 0f;
+    }
 }

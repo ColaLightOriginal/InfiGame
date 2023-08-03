@@ -23,13 +23,11 @@ public class PlayerSystems {
     private ArrayList<Vector2> shootingPointsList;
     private LinkedList<PowerUpsEnum> possiblePowerUps;
     private LinkedList<PowerUpsEnum> actualPowerUps;
-    private boolean isRayCastShooting;
     private Random PRNG = new Random();
 
     public PlayerSystems(PlayerObject playerObject){
         this.playerObject = playerObject;
         this.shootingPointObjectsList = new HashMap<>();
-        this.isRayCastShooting = false;
         this.actualPowerUps = new LinkedList<>();
         this.possiblePowerUps = new LinkedList<>();
 

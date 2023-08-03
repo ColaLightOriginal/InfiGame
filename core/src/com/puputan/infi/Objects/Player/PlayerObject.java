@@ -38,7 +38,8 @@ public class PlayerObject extends BaseObject {
     }
 
     public void positionToMousePosition(){
-        Vector2 targetPosition = validatePlayerMovementPosition(this);
+        Vector2 mousePosition = new Vector2(MouseUtils.getMousePositionX(), MouseUtils.getMousePositionY());
+        Vector2 targetPosition = validatePlayerMovementPosition(mousePosition);
         Vector2 resultPosition;
 
         Vector2 actualPosition = new Vector2(this.getX(), this.getY());
@@ -46,14 +47,14 @@ public class PlayerObject extends BaseObject {
         this.setPosition(resultPosition.x, resultPosition.y);
     }
 
-    public Vector2 validatePlayerMovementPosition(Image image){
-        Vector2 mousePosition = new Vector2(MouseUtils.getMousePositionX(), Gdx.graphics.getHeight() - MouseUtils.getMousePositionY());
+    public Vector2 validatePlayerMovementPosition(Vector2 targetPosition){
+        Vector2 mousePosition = new Vector2(targetPosition.x, Gdx.graphics.getHeight() - targetPosition.y);
         Vector2 resultVector = new Vector2(mousePosition.x, mousePosition.y);
 
-        if(mousePosition.y > borderHeightPosition) resultVector.y = borderHeightPosition-image.getHeight()/2;
-        if(mousePosition.x < 0) resultVector.x = 0 + image.getWidth()/2;
-        if(mousePosition.y < 0) resultVector.y = 0 + image.getHeight()/2;
-        if(mousePosition.x > Gdx.graphics.getWidth()) resultVector.x = Gdx.graphics.getWidth() - image.getWidth()/2;
+        if(mousePosition.y > borderHeightPosition) resultVector.y = borderHeightPosition-this.getHeight()/2;
+        if(mousePosition.x < 0) resultVector.x = 0 + this.getWidth()/2;
+        if(mousePosition.y < 0) resultVector.y = 0 + this.getHeight()/2;
+        if(mousePosition.x > Gdx.graphics.getWidth()) resultVector.x = Gdx.graphics.getWidth() - this.getWidth()/2;
         return resultVector;
     }
 
