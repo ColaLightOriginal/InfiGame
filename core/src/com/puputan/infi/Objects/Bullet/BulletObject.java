@@ -21,8 +21,7 @@ public class BulletObject extends BaseObject {
     public BulletObject(ShootingPointObject shootingPointObject, ShootingPointType shootingPointType){
         super(AssetsRepository.bulletTexture);
 
-        this.setPosition(shootingPointObject.getPosition().x, shootingPointObject.getPosition().y);
-        this.getBody().setTransform(this.getX(), this.getY(),0);
+        this.moveObjectPosition(shootingPointObject.getPosition());
         this.shootingPointType = shootingPointType;
     }
 

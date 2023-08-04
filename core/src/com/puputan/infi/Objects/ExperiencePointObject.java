@@ -15,6 +15,8 @@ import com.puputan.infi.Utils.MovementUtils;
 public class ExperiencePointObject extends BaseObject {
 
     private float velocity = 75;
+    private float movingToPlayerVelocity = 200 + velocity;
+    private float movingToPlayerDistanceThreshold = 0.2f;
     private boolean isAddedToDispose;
     private boolean isMovingToPlayer;
 
@@ -31,14 +33,13 @@ public class ExperiencePointObject extends BaseObject {
     @Override
     public void act(float delta) {
         validateOutPosition();
-        if(MovementUtils.getDistanceBetweenObjects(this, GameScreen.playerObject) < 300f || this.isMovingToPlayer){
+        if(MovementUtils.getDistanceBetweenObjects(this, GameScreen.playerObject) < movingToPlayerDistanceThreshold*GameScreen.HEIGHT || this.isMovingToPlayer){
             this.isMovingToPlayer = true;
             Vector2 newPosition;
-            newPosition = MovementUtils.moveTowardsPoint(new Vector2(this.getX(), this.getY()),
-                    new Vector2(GameScreen.playerObject.getX(), GameScreen.playerObject.getY()), this.velocity + 200f);
+            newPosition = MovementUtils.moveTowardsPoint(this.getVectorPosition(), GameScreen.playerObject.getMiddlePosition(), movingToPlayerVelocity);
             this.setPosition(newPosition.x, newPosition.y);
         }
-        else this.setY(MovementUtils.moveVertical(new Vector2(this.getX(), this.getY()), false, velocity));
+        else this.setY(MovementUtils.moveVertical(this.getVectorPosition(), false, velocity));
         this.getBody().setTransform(this.getX(), this.getY(), 0);
     }
 
