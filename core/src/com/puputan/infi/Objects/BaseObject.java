@@ -3,6 +3,7 @@ package com.puputan.infi.Objects;
 import Screens.GameScreen;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Fixture;
@@ -22,7 +23,7 @@ public abstract class BaseObject extends Image {
     public BaseObject(Texture texture){
         super(texture);
         GameScreen.stage.addActor(this);
-        this.setSize(this.getWidth()*0.25f, this.getHeight()*0.25f);
+        this.setSize(this.getWidth()*0.1f, this.getHeight()*0.1f);
         body = BodyUtils.defineBody(BodyDef.BodyType.DynamicBody, this);
         body.setUserData(this);
         isAddedToDispose = false;
@@ -46,6 +47,19 @@ public abstract class BaseObject extends Image {
         BaseObject bo = (BaseObject) body.getUserData();
         bo.remove();
         GameScreen.bodiesToDestroy.add(body);
+    }
+
+    public void moveObjectPosition(Vector2 newPosition){
+        this.setPosition(newPosition.x, newPosition.y);
+        this.getBody().setTransform(this.getX(), this.getY(), 0);
+    }
+
+    public Vector2 getVectorPosition(){
+        return new Vector2(this.getX(), this.getY());
+    }
+
+    public Vector2 getMiddlePosition(){
+        return new Vector2(this.getX()+this.getWidth()/2, this.getY()+this.getHeight()/2);
     }
 
     public void createBody(BodyDef bodyDef){

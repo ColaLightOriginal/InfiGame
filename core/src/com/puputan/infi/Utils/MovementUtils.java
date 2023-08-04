@@ -11,7 +11,7 @@ import java.awt.*;
 
 public class MovementUtils {
 
-    private static float time = Gdx.graphics.getDeltaTime();
+    private static final float dashDistance = Gdx.graphics.getWidth()*0.1f;
 
     public static Vector2 moveTowardsPoint(Vector2 actualPosition, Vector2 targetPosition, float velocity) {
         float distance = actualPosition.dst(targetPosition);
@@ -47,7 +47,18 @@ public class MovementUtils {
         return (float) Math.sqrt (Math.pow(objectB.getX() - objectA.getX(),2) + Math.pow(objectB.getY() - objectA.getY(),2));
     }
 
-    public static float dashToDirection(Vector2 actualPosition, Vector2 mousePosition, float distance){
-        return 0f;
+    public static float getDistanceBetweenPoints(Vector2 positionA, Vector2 positionB){
+        return (float) Math.sqrt (Math.pow(positionB.x - positionA.x,2) + Math.pow(positionB.y - positionA.y,2));
+    }
+
+    public static Vector2 dashToPosition(Vector2 actualPosition, Vector2 destinedPosition){
+        float distanceBetweenPoints = getDistanceBetweenPoints(actualPosition, destinedPosition);
+        Vector2 direction = actualPosition.cpy().sub(destinedPosition).nor();
+        direction.set(-direction.x, -direction.y);
+
+        if(distanceBetweenPoints > dashDistance) actualPosition.add(direction.scl(dashDistance));
+        else actualPosition.add(direction.scl(distanceBetweenPoints - dashDistance));
+
+        return actualPosition;
     }
 }

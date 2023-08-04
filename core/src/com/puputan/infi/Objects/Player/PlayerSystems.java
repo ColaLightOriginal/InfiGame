@@ -122,7 +122,7 @@ public class PlayerSystems {
         LinkedList<PowerUpsEnum> tmpPowerUpsList = new LinkedList<>(possiblePowerUps);
         PowerUpsEnum powerUpsEnum;
 
-        for(int i =0; i < 3; i++) {
+        for(int i=0; i<3; i++) {
             powerUpsEnum = getRandomPowerUp(tmpPowerUpsList);
             tmpPowerUpsList = validatePowerUp(tmpPowerUpsList, powerUpsEnum);
         }
@@ -145,6 +145,7 @@ public class PlayerSystems {
                 break;
             case ShootingPointsUpgrade:
                 powerUpsList.remove(PowerUpsEnum.ShootingPointsUpgrade);
+                break;
         }
         return powerUpsList;
     }

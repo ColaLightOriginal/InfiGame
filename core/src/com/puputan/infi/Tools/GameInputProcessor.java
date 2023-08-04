@@ -43,6 +43,8 @@ public class GameInputProcessor implements InputProcessor {
             case Input.Buttons.LEFT:
                 this.playerObject.getPlayerSystems().shoot();
                 return true;
+            case Input.Buttons.RIGHT:
+                this.playerObject.dash();
         }
         return false;
     }

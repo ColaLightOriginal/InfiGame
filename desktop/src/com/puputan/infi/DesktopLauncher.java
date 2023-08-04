@@ -1,5 +1,6 @@
 package com.puputan.infi;
 
+import Screens.GameScreen;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.puputan.infi.InfiGame;
@@ -10,7 +11,7 @@ public class DesktopLauncher {
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
 		config.setForegroundFPS(60);
 		config.setTitle("Infi");
-		config.setWindowedMode(1920, 1080);
+		config.setWindowedMode((int)GameScreen.WIDTH, (int)GameScreen.HEIGHT);
 		new Lwjgl3Application(new InfiGame(), config);
 	}
 }

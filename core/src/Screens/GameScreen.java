@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.puputan.infi.Configurations.AssetsRepository;
 import com.puputan.infi.InfiGame;
 import com.puputan.infi.Tools.ContactListener;
@@ -25,8 +26,8 @@ import java.util.ArrayList;
 
 public class GameScreen implements Screen {
 
-    public final static float WIDTH = 1920;
-    public final static float HEIGHT = 1080;
+    public final static float WIDTH = 414;
+    public final static float HEIGHT = 896;
     public static Stage stage;
     public static World world;
     private Box2DDebugRenderer debugRenderer;
@@ -46,7 +47,7 @@ public class GameScreen implements Screen {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, WIDTH, HEIGHT);
 
-        stage = new Stage(new FitViewport(WIDTH,HEIGHT, camera));
+        stage = new Stage(new ScreenViewport(camera));
         world = new World(new Vector2(0,0), true);
         ContactListener contactListener = new ContactListener();
         world.setContactListener(contactListener);
