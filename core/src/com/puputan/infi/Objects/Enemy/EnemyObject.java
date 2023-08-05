@@ -19,7 +19,7 @@ public class EnemyObject extends BaseObject {
 
     public EnemyObject(EnemyType enemyType, Vector2 position){
         super(AssetsRepository.enemyTexture);
-        GameScreen.stage.addActor(this);
+        GameScreen.gameStage.addActor(this);
         this.enemyType = enemyType;
 
         this.setPosition(position.x, position.y);

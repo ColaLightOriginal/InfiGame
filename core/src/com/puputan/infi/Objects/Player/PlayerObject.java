@@ -20,6 +20,7 @@ public class PlayerObject extends BaseObject {
     private final float PLAYER_BORDER_HEIGHT_VALUE = 0.5f;
     @Setter
     private float VELOCITY = 200;
+    private final float MAX_VELOCITY = VELOCITY + 400;
     private final float borderHeightPosition;
 
     private final PlayerSystems playerSystems;

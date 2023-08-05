@@ -8,7 +8,6 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.utils.compression.lzma.Base;
 import com.puputan.infi.Utils.BodyUtils;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,7 +21,7 @@ public abstract class BaseObject extends Image {
 
     public BaseObject(Texture texture){
         super(texture);
-        GameScreen.stage.addActor(this);
+        GameScreen.gameStage.addActor(this);
         this.setSize(this.getWidth()*0.1f, this.getHeight()*0.1f);
         body = BodyUtils.defineBody(BodyDef.BodyType.DynamicBody, this);
         body.setUserData(this);

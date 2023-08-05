@@ -6,9 +6,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.TimeUtils;
-import com.puputan.infi.InfiGame;
 
-import java.sql.Time;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -27,7 +25,7 @@ public class EnemySpawner extends Actor {
         this.enemyTypes = EnemyType.values();
         spawnDeltaTimeInSeconds = 3;
         this.lastSpawnTime = TimeUtils.nanoTime() * MathUtils.nanoToSec;
-        GameScreen.stage.addActor(this);
+        GameScreen.gameStage.addActor(this);
     }
 
     private void spawnRandomEnemy() {

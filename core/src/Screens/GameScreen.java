@@ -1,5 +1,6 @@
 package Screens;
 
+import Screens.Stages.PowerUpChooseUIStage;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -10,17 +11,16 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.puputan.infi.Configurations.AssetsRepository;
 import com.puputan.infi.InfiGame;
-import com.puputan.infi.Tools.ContactListener;
 import com.puputan.infi.Objects.Bullet.BulletObject;
 import com.puputan.infi.Objects.Enemy.EnemyObject;
 import com.puputan.infi.Objects.Enemy.EnemySpawner;
 import com.puputan.infi.Objects.Player.PlayerObject;
-import lombok.Getter;
-import lombok.Setter;
+import com.puputan.infi.Tools.ContactListener;
+import com.puputan.infi.Processors.GameInputProcessor;
 
 import java.util.ArrayList;
 
@@ -28,44 +28,45 @@ public class GameScreen implements Screen {
 
     public final static float WIDTH = 414;
     public final static float HEIGHT = 896;
-    public static Stage stage;
+    public static Stage gameStage;
+    public static PowerUpChooseUIStage powerUpChooseUIStage;
     public static World world;
-    private Box2DDebugRenderer debugRenderer;
+
+    private final Box2DDebugRenderer debugRenderer;
     public static ArrayList<BulletObject> bulletsList;
-    private OrthographicCamera camera;
     public static Array<Body> bodiesToDestroy;
     public static PlayerObject playerObject;
     public static EnemySpawner enemySpawner;
 
-    private final InfiGame game;
+    private final OrthographicCamera camera;
+    public static GameStatesEnum gameStates;
+    private GameInputProcessor gameInputProcessor;
 
-    private GameStates gameStates;
 
     public GameScreen(InfiGame game){
 
-        this.game = game;
         camera = new OrthographicCamera();
         camera.setToOrtho(false, WIDTH, HEIGHT);
 
-        stage = new Stage(new ScreenViewport(camera));
+        Viewport screenViewport= new ScreenViewport(camera);
+
+        gameStage = new Stage(screenViewport);
+        powerUpChooseUIStage = new PowerUpChooseUIStage(screenViewport);
+
         world = new World(new Vector2(0,0), true);
+        debugRenderer = new Box2DDebugRenderer();
+
         ContactListener contactListener = new ContactListener();
         world.setContactListener(contactListener);
 
         bodiesToDestroy = new Array<>();
-
-        debugRenderer = new Box2DDebugRenderer();
-
         playerObject = new PlayerObject();
         enemySpawner = new EnemySpawner();
-
         bulletsList = new ArrayList<>();
 
-        this.gameStates=GameStates.Running;
+        gameStates= GameStatesEnum.Running;
 
-        com.puputan.infi.Processors.GameInputProcessor gameInputProcessor =
-                new com.puputan.infi.Processors.GameInputProcessor(playerObject, this);
-        Gdx.input.setInputProcessor(gameInputProcessor);
+        gameInputProcessor = new GameInputProcessor(playerObject, this);
     }
 
     @Override
@@ -74,12 +75,13 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        switch (this.gameStates){
+        switch (gameStates){
             case Running:
+                Gdx.input.setInputProcessor(gameInputProcessor);
                 ScreenUtils.clear(0, 0, 0, 1);
 
-                stage.act(Gdx.graphics.getDeltaTime());
-                stage.draw();
+                gameStage.act(Gdx.graphics.getDeltaTime());
+                gameStage.draw();
 
                 debugRenderer.render(world, camera.combined);
                 world.step(1/60f, 6, 2);
@@ -87,6 +89,13 @@ public class GameScreen implements Screen {
                 break;
             case Paused:
                 ScreenUtils.clear(0, 0, 0, 1);
+                break;
+            case PowerUpChoose:
+                Gdx.input.setInputProcessor(powerUpChooseUIStage);
+                ScreenUtils.clear(0, 0, 0, 1);
+
+                powerUpChooseUIStage.act(Gdx.graphics.getDeltaTime());
+                powerUpChooseUIStage.draw();
                 break;
         }
     }
@@ -97,9 +106,9 @@ public class GameScreen implements Screen {
 
     @Override
     public void pause() {
-        if(this.gameStates == GameStates.Running)
-            this.gameStates = GameStates.Paused;
-        else this.gameStates = GameStates.Running;
+        if(gameStates == GameStatesEnum.Running)
+            gameStates = GameStatesEnum.Paused;
+        else gameStates = GameStatesEnum.Running;
     }
 
     @Override
@@ -114,6 +123,7 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
         AssetsRepository.disposeAssets();
+        gameStage.dispose();
     }
 
     public void clearBodies(){

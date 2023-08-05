@@ -1,6 +1,7 @@
 package com.puputan.infi.Objects.Player;
 
 import Screens.GameScreen;
+import Screens.GameStatesEnum;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.puputan.infi.Objects.Enemy.EnemyObject;
@@ -103,7 +104,7 @@ public class PlayerSystems {
     }
 
     public void gainExp(){
-        if(this.level >= this.experienceLevels.get(this.experienceLevels.size()-1)) return;
+        if(this.level >= this.experienceLevels.size()-1) return;
         this.experience += 100;
         this.checkLevel();
     }
@@ -114,11 +115,13 @@ public class PlayerSystems {
     }
 
     private void levelUp(){
+        LinkedList<PowerUpsEnum> rolledUpgrades = rollUpgrade();
         this.level++;
-        rollUpgrade();
+        GameScreen.gameStates = GameStatesEnum.PowerUpChoose;
+        GameScreen.powerUpChooseUIStage.addButtons(rolledUpgrades);
     }
 
-    private void rollUpgrade(){
+    private LinkedList<PowerUpsEnum> rollUpgrade(){
         LinkedList<PowerUpsEnum> tmpPowerUpsList = new LinkedList<>(possiblePowerUps);
         PowerUpsEnum powerUpsEnum;
 
@@ -126,9 +129,7 @@ public class PlayerSystems {
             powerUpsEnum = getRandomPowerUp(tmpPowerUpsList);
             tmpPowerUpsList = validatePowerUp(tmpPowerUpsList, powerUpsEnum);
         }
-
-        System.out.println(tmpPowerUpsList);
-        this.activatePowerUp(tmpPowerUpsList.get(0));
+        return tmpPowerUpsList;
     }
 
     private LinkedList<PowerUpsEnum> validatePowerUp(LinkedList<PowerUpsEnum> powerUpsList, PowerUpsEnum powerUp){
@@ -137,7 +138,7 @@ public class PlayerSystems {
                 possiblePowerUps.remove(powerUp);
                 break;
             case SpeedUp:
-                if(this.playerObject.getVELOCITY() >= 1000) powerUpsList.remove(PowerUpsEnum.SpeedUp);
+                if(this.playerObject.getVELOCITY() >= this.playerObject.getMAX_VELOCITY()) powerUpsList.remove(PowerUpsEnum.SpeedUp);
                 break;
             case Bullets:
                 powerUpsList.remove(PowerUpsEnum.Bullets);
@@ -150,7 +151,7 @@ public class PlayerSystems {
         return powerUpsList;
     }
 
-    private void activatePowerUp(PowerUpsEnum powerUp){
+    public void activatePowerUp(PowerUpsEnum powerUp){
         switch (powerUp){
             case RayCast:
                 actualPowerUps.add(powerUp);
@@ -170,6 +171,7 @@ public class PlayerSystems {
                 this.upgradeShootingPoints();
                 this.actualPowerUps.add(PowerUpsEnum.ShootingPointsUpgrade);
                 this.possiblePowerUps.remove(PowerUpsEnum.ShootingPointsUpgrade);
+                break;
         }
     }
 

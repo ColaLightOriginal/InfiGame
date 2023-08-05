@@ -1,7 +1,8 @@
 package Screens;
 
-public enum GameStates {
+public enum GameStatesEnum {
     Running,
     Paused,
+    PowerUpChoose,
     Over
 }

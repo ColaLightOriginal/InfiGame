@@ -1,9 +1,7 @@
 package com.puputan.infi.Processors;
 import Screens.GameScreen;
-import Screens.GameStates;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.Screen;
 import com.puputan.infi.Objects.Player.PlayerObject;
 
 public class GameInputProcessor implements InputProcessor {
