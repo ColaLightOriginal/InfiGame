@@ -105,12 +105,10 @@ public class PlayerSystems {
 
     public void gainExp(){
         if(this.level >= this.experienceLevels.size()-1) return;
-        this.experience += 100;
-        this.checkLevel();
-    }
 
-    private void checkLevel(){
+        this.experience += 100;
         long experienceToLevel = this.experienceLevels.get(this.level+1);
+
         if(this.experience >= experienceToLevel) this.levelUp();
     }
 
@@ -123,54 +121,58 @@ public class PlayerSystems {
 
     private LinkedList<PowerUpsEnum> rollUpgrade(){
         LinkedList<PowerUpsEnum> tmpPowerUpsList = new LinkedList<>(possiblePowerUps);
-        PowerUpsEnum powerUpsEnum;
+        LinkedList<PowerUpsEnum> resultPowerUpsList = new LinkedList<>();
 
-        for(int i=0; i<3; i++) {
-            powerUpsEnum = getRandomPowerUp(tmpPowerUpsList);
-            tmpPowerUpsList = validatePowerUp(tmpPowerUpsList, powerUpsEnum);
-        }
-        return tmpPowerUpsList;
+        for(int i=0; i<3; i++)  validatePowerUp(tmpPowerUpsList, resultPowerUpsList, getRandomPowerUp(tmpPowerUpsList));
+        return resultPowerUpsList;
     }
 
-    private LinkedList<PowerUpsEnum> validatePowerUp(LinkedList<PowerUpsEnum> powerUpsList, PowerUpsEnum powerUp){
+    private void validatePowerUp(LinkedList<PowerUpsEnum> powerUpsList,
+                                 LinkedList<PowerUpsEnum> resultsList, PowerUpsEnum powerUp){
+
         switch (powerUp){
             case RayCast:
-                possiblePowerUps.remove(powerUp);
+            case ShootingPointsUpgrade:
+                powerUpsList.remove(powerUp);
+                resultsList.add(powerUp);
                 break;
             case SpeedUp:
-                if(this.playerObject.getVELOCITY() >= this.playerObject.getMAX_VELOCITY()) powerUpsList.remove(PowerUpsEnum.SpeedUp);
+                if(this.playerObject.getVELOCITY() <= this.playerObject.getMAX_VELOCITY()){
+                    powerUpsList.remove(powerUp);
+                    resultsList.add(powerUp);
+                }
                 break;
             case Bullets:
-                powerUpsList.remove(PowerUpsEnum.Bullets);
+                powerUpsList.remove(powerUp);
                 powerUpsList.add(PowerUpsEnum.RayCast);
-                break;
-            case ShootingPointsUpgrade:
-                powerUpsList.remove(PowerUpsEnum.ShootingPointsUpgrade);
+                resultsList.add(powerUp);
                 break;
         }
-        return powerUpsList;
     }
 
     public void activatePowerUp(PowerUpsEnum powerUp){
         switch (powerUp){
             case RayCast:
                 actualPowerUps.add(powerUp);
+                actualPowerUps.remove(PowerUpsEnum.Bullets);
+                actualPowerUps.remove(PowerUpsEnum.ShootingPointsUpgrade);
                 possiblePowerUps.remove(powerUp);
+                possiblePowerUps.add(PowerUpsEnum.Bullets);
                 break;
             case SpeedUp:
                 this.playerObject.setVELOCITY(this.playerObject.getVELOCITY()+100);
                 if(this.playerObject.getVELOCITY() >= 1000) this.possiblePowerUps.remove(PowerUpsEnum.SpeedUp);
                 break;
             case Bullets:
-                actualPowerUps.add(PowerUpsEnum.Bullets);
+                actualPowerUps.add(powerUp);
                 actualPowerUps.remove(PowerUpsEnum.RayCast);
-                possiblePowerUps.remove(PowerUpsEnum.Bullets);
+                possiblePowerUps.remove(powerUp);
                 possiblePowerUps.add(PowerUpsEnum.RayCast);
                 break;
             case ShootingPointsUpgrade:
                 this.upgradeShootingPoints();
-                this.actualPowerUps.add(PowerUpsEnum.ShootingPointsUpgrade);
-                this.possiblePowerUps.remove(PowerUpsEnum.ShootingPointsUpgrade);
+                this.actualPowerUps.add(powerUp);
+                this.possiblePowerUps.remove(powerUp);
                 break;
         }
     }

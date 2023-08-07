@@ -13,13 +13,12 @@ import com.puputan.infi.Tools.ChangeListenerImpl;
 
 import java.util.LinkedList;
 
-
 public class PowerUpChooseUIStage extends Stage {
 
-    Table table;
-    TextButton powerUpButton;
-    TextButtonStyle textButtonStyle;
-    ChangeListenerImpl changeListener;
+    private final Table table;
+    private final TextButtonStyle textButtonStyle;
+    private final ChangeListenerImpl changeListener;
+    private LinkedList<TextButton> powerUpsButtons;
 
     public PowerUpChooseUIStage(Viewport viewport){
         super(viewport);
@@ -31,6 +30,7 @@ public class PowerUpChooseUIStage extends Stage {
         changeListener = new ChangeListenerImpl();
         this.addListener(changeListener);
         textButtonStyle = buttonTextStyle();
+        powerUpsButtons = new LinkedList<>();
     }
 
     public TextButtonStyle buttonTextStyle(){
@@ -44,12 +44,18 @@ public class PowerUpChooseUIStage extends Stage {
         for (PowerUpsEnum powerUp : powerUpsEnums) {
             TextButton txtButton = new TextButton(powerUp.name(), textButtonStyle);
             setActorUiObject(powerUp,txtButton.getClass().getName(), "Power Up Button", txtButton);
+            powerUpsButtons.add(txtButton);
             this.table.add(txtButton);
         }
     }
 
     public void setActorUiObject(PowerUpsEnum name, String type, String tag, Actor actor){
         actor.setUserObject(new UiDataObject(name, type, tag));
+    }
+
+    public void clearButtonsList(){
+        for (TextButton txtButton : this.powerUpsButtons) this.table.removeActor(txtButton);
+        this.powerUpsButtons.clear();
     }
 
     @Override

@@ -48,7 +48,7 @@ public class GameScreen implements Screen {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, WIDTH, HEIGHT);
 
-        Viewport screenViewport= new ScreenViewport(camera);
+        Viewport screenViewport = new ScreenViewport(camera);
 
         gameStage = new Stage(screenViewport);
         powerUpChooseUIStage = new PowerUpChooseUIStage(screenViewport);
@@ -64,7 +64,7 @@ public class GameScreen implements Screen {
         enemySpawner = new EnemySpawner();
         bulletsList = new ArrayList<>();
 
-        gameStates= GameStatesEnum.Running;
+        gameStates=GameStatesEnum.Running;
 
         gameInputProcessor = new GameInputProcessor(playerObject, this);
     }
