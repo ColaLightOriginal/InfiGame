@@ -3,7 +3,9 @@ package com.puputan.infi.Objects.Player;
 import Screens.GameScreen;
 import Screens.GameStatesEnum;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.puputan.infi.Objects.Enemy.EnemyObject;
 import com.puputan.infi.Tools.RaycastCallbackImpl;
 import com.puputan.infi.Objects.Bullet.BulletObject;
@@ -26,11 +28,16 @@ public class PlayerSystems {
     private LinkedList<PowerUpsEnum> actualPowerUps;
     private Random PRNG = new Random();
 
+    private float lastShootTime;
+    private float shootingTimeDelta;
+
     public PlayerSystems(PlayerObject playerObject){
         this.playerObject = playerObject;
         this.shootingPointObjectsList = new HashMap<>();
         this.actualPowerUps = new LinkedList<>();
         this.possiblePowerUps = new LinkedList<>();
+        this.lastShootTime = 0f;
+        this.shootingTimeDelta = 1f;
 
         initializeLevels();
         initializeShootingPoints();
@@ -39,11 +46,11 @@ public class PlayerSystems {
 
     public void initializeLevels(){
         this.experienceLevels.put(0, 0L);
-        this.experienceLevels.put(1, 100L);
-        this.experienceLevels.put(2, 200L);
-        this.experienceLevels.put(3, 300L);
-        this.experienceLevels.put(4, 400L);
-        this.experienceLevels.put(5, 500L);
+        this.experienceLevels.put(1, 1000L);
+        this.experienceLevels.put(2, 2000L);
+        this.experienceLevels.put(3, 3000L);
+        this.experienceLevels.put(4, 4000L);
+        this.experienceLevels.put(5, 5000L);
     }
 
     public void initializePowerUps(){
@@ -80,9 +87,11 @@ public class PlayerSystems {
     }
 
     public void shoot(){
+        if(GameScreen.gameTime - this.lastShootTime < this.shootingTimeDelta) return;
         if(actualPowerUps.stream().anyMatch(powerUp -> powerUp == PowerUpsEnum.Bullets)){
             GameScreen.bulletsList.addAll(shootBullet());
         } else shootRayCast();
+        this.lastShootTime = GameScreen.gameTime;
     }
 
     public ArrayList<BulletObject> shootBullet(){
@@ -116,6 +125,7 @@ public class PlayerSystems {
         LinkedList<PowerUpsEnum> rolledUpgrades = rollUpgrade();
         this.level++;
         GameScreen.gameStates = GameStatesEnum.PowerUpChoose;
+        GameScreen.pauseTime = TimeUtils.nanoTime() * MathUtils.nanoToSec;
         GameScreen.powerUpChooseUIStage.addButtons(rolledUpgrades);
     }
 
@@ -123,7 +133,10 @@ public class PlayerSystems {
         LinkedList<PowerUpsEnum> tmpPowerUpsList = new LinkedList<>(possiblePowerUps);
         LinkedList<PowerUpsEnum> resultPowerUpsList = new LinkedList<>();
 
-        for(int i=0; i<3; i++)  validatePowerUp(tmpPowerUpsList, resultPowerUpsList, getRandomPowerUp(tmpPowerUpsList));
+        for(int i=0; i<3; i++){
+            if(tmpPowerUpsList.size() == 0) return resultPowerUpsList;
+            validatePowerUp(tmpPowerUpsList, resultPowerUpsList, getRandomPowerUp(tmpPowerUpsList));
+        }
         return resultPowerUpsList;
     }
 

@@ -8,7 +8,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 public class ChangeListenerImpl extends ChangeListener {
 
-
     @Override
     public void changed(ChangeEvent event, Actor actor) {
         if(actor.getUserObject() instanceof UiDataObject) {

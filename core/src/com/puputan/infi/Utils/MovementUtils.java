@@ -3,11 +3,8 @@ package com.puputan.infi.Utils;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.puputan.infi.Objects.BaseObject;
-
-import java.awt.*;
 
 public class MovementUtils {
 
@@ -25,7 +22,7 @@ public class MovementUtils {
         }
     }
 
-    public static float moveHorizontal(Vector2 actualPosition ,boolean isRight, float velocity){
+    public static float moveHorizontal(Vector2 actualPosition, boolean isRight, float velocity){
         if(isRight) return actualPosition.x += velocity*Gdx.graphics.getDeltaTime();
         return actualPosition.x -= velocity*Gdx.graphics.getDeltaTime();
     }

@@ -1,6 +1,7 @@
 package com.puputan.infi.Objects.Enemy;
 
 import Screens.GameScreen;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.puputan.infi.Configurations.AssetsRepository;
@@ -9,13 +10,17 @@ import com.puputan.infi.Objects.Bullet.BulletObject;
 import com.puputan.infi.Objects.ExperiencePointObject;
 import com.puputan.infi.Objects.Player.PlayerObject;
 import com.puputan.infi.Utils.MovementUtils;
+import lombok.Setter;
 
 public class EnemyObject extends BaseObject {
 
     private int hp = 1;
     private final float velocity = 150;
     private EnemyType enemyType;
-    private boolean addedToDispose;
+
+    @Setter
+    private Vector2 targetPosition;
+    private boolean atTargetPosition;
 
     public EnemyObject(EnemyType enemyType, Vector2 position){
         super(AssetsRepository.enemyTexture);
@@ -24,6 +29,9 @@ public class EnemyObject extends BaseObject {
 
         this.setPosition(position.x, position.y);
         this.getBody().setTransform(this.getX(), this.getY(),0);
+
+        this.atTargetPosition = false;
+        GameScreen.enemiesList.add(this);
     }
 
     public void act(float delta) {
@@ -44,14 +52,23 @@ public class EnemyObject extends BaseObject {
                 newPosition = MovementUtils.moveSinusoidal(actualPosition, 5, 10, velocity, 25);
                 this.setPosition(newPosition.x, newPosition.y);
                 break;
+            case Positioner:
+                if(!this.atTargetPosition){
+                    newPosition = MovementUtils.moveTowardsPoint(actualPosition, targetPosition, velocity);
+                    this.setPosition(newPosition.x, newPosition.y);
+                    if(newPosition.epsilonEquals(targetPosition)) this.atTargetPosition = true;
+                }
+                else this.setY(MovementUtils.moveVertical(actualPosition,false, 20));
+                break;
         }
         this.getBody().setTransform(this.getX(), this.getY(), 0);
     }
 
     public void hit(){
         this.hp--;
-        if(this.hp <= 0 && !this.addedToDispose){
-            this.addedToDispose = true;
+        if(this.hp <= 0 && !this.isAddedToDispose()){
+            this.setAddedToDispose(true);
+            GameScreen.enemiesList.remove(this);
             this.addToDispose(this.getBody());
         }
     }
@@ -65,8 +82,8 @@ public class EnemyObject extends BaseObject {
     }
 
     public void validateOutPosition(){
-        if(this.getY() < 0 - this.getHeight() && !this.addedToDispose) {
-            this.addedToDispose = true;
+        if(this.getY() < 0 - this.getHeight() && !this.isAddedToDispose()) {
+            this.setAddedToDispose(true);
             this.addToDispose(this.getBody());
         }
     }

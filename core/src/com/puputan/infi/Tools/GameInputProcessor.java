@@ -1,4 +1,4 @@
-package com.puputan.infi.Processors;
+package com.puputan.infi.Tools;
 import Screens.GameScreen;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
