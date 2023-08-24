@@ -5,5 +5,6 @@ public enum PowerUpsEnum {
     Bullets,
     ShootingPointsUpgrade,
     RayCast,
-    SpeedUp;
+    SpeedUp,
+    FasterReload;
 }

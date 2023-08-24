@@ -74,7 +74,7 @@ public class GameScreen implements Screen {
         bulletsList = new ArrayList<>();
         enemiesList = new ArrayList<>();
 
-        gameStates=GameStatesEnum.Running;
+        gameStates = GameStatesEnum.Running;
 
         gameInputProcessor = new GameInputProcessor(playerObject, this);
     }

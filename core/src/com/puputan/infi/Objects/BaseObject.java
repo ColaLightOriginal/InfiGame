@@ -30,6 +30,12 @@ public abstract class BaseObject extends Image {
 
     public abstract void onCollision(Fixture fixture);
     public abstract void act(float delta);
+    public abstract void onDestroy();
+
+    public void destroy(){
+        this.setAddedToDispose(true);
+        this.addToDispose(this.getBody());
+    }
     public void scaleSize(float scaleValue, Sprite sprite){
         sprite.setSize(sprite.getWidth()*scaleValue, sprite.getHeight()*scaleValue);
     }
@@ -66,6 +72,6 @@ public abstract class BaseObject extends Image {
     }
 
     public void createObject(){
-
     }
+
 }

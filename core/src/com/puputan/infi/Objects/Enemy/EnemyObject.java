@@ -54,11 +54,11 @@ public class EnemyObject extends BaseObject {
                 break;
             case Positioner:
                 if(!this.atTargetPosition){
-                    newPosition = MovementUtils.moveTowardsPoint(actualPosition, targetPosition, velocity);
+                    newPosition = MovementUtils.moveTowardsPoint(actualPosition, targetPosition, velocity*2);
                     this.setPosition(newPosition.x, newPosition.y);
                     if(newPosition.epsilonEquals(targetPosition)) this.atTargetPosition = true;
                 }
-                else this.setY(MovementUtils.moveVertical(actualPosition,false, 20));
+                else this.setY(MovementUtils.moveVertical(actualPosition,false, velocity));
                 break;
         }
         this.getBody().setTransform(this.getX(), this.getY(), 0);
@@ -67,24 +67,21 @@ public class EnemyObject extends BaseObject {
     public void hit(){
         this.hp--;
         if(this.hp <= 0 && !this.isAddedToDispose()){
-            this.setAddedToDispose(true);
+            this.destroy();
             GameScreen.enemiesList.remove(this);
-            this.addToDispose(this.getBody());
         }
     }
 
     @Override
     public void onCollision(Fixture fixture) {
         Object object = fixture.getBody().getUserData();
-        if(object instanceof BulletObject || object instanceof PlayerObject){
-            hit();
-        }
+        if(object instanceof BulletObject || object instanceof PlayerObject) hit();
     }
 
     public void validateOutPosition(){
-        if(this.getY() < 0 - this.getHeight() && !this.isAddedToDispose()) {
-            this.setAddedToDispose(true);
-            this.addToDispose(this.getBody());
+        if(this.getY() < 0 - this.getHeight() && !this.isAddedToDispose()){
+            destroy();
+            GameScreen.enemiesList.remove(this);
         }
     }
 

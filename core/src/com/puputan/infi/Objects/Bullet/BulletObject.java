@@ -41,19 +41,19 @@ public class BulletObject extends BaseObject {
         this.getBody().setTransform(this.getX(), this.getY(), 0);
     }
 
+    @Override
+    public void onDestroy() {
+    }
+
     public void validateOutPosition(){
-        if(this.getY() > (GameScreen.HEIGHT + this.getHeight()) && !this.isAddedToDispose()){
-            this.setAddedToDispose(true);
-            this.addToDispose(this.getBody());
-        }
+        if(this.getY() > (GameScreen.HEIGHT + this.getHeight()) && !this.isAddedToDispose())
+            this.destroy();
     }
 
     @Override
     public void onCollision(Fixture fixture) {
         Object object = fixture.getBody().getUserData();
-        if(object instanceof EnemyObject && !this.isAddedToDispose()) {
-            this.setAddedToDispose(true);
-            this.addToDispose(this.getBody());
-        }
+        if(object instanceof EnemyObject && !this.isAddedToDispose())
+            this.destroy();
     }
 }

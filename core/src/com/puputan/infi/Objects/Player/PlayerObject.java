@@ -37,6 +37,10 @@ public class PlayerObject extends BaseObject {
         positionToMousePosition();
     }
 
+    @Override
+    public void onDestroy() {
+    }
+
     public void positionToMousePosition(){
         Vector2 mousePosition = MouseUtils.getMousePositionVector();
         Vector2 targetPosition = validatePlayerMovementPosition(mousePosition);

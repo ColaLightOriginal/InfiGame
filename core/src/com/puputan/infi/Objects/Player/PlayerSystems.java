@@ -30,6 +30,7 @@ public class PlayerSystems {
 
     private float lastShootTime;
     private float shootingTimeDelta;
+    private float minimumShootingTime = 0.2f;
 
     public PlayerSystems(PlayerObject playerObject){
         this.playerObject = playerObject;
@@ -106,8 +107,7 @@ public class PlayerSystems {
     public void hit(){
         this.hp--;
         if(this.hp<=0 && !this.playerObject.isAddedToDispose()) {
-            this.playerObject.setAddedToDispose(true);
-            this.playerObject.addToDispose(this.playerObject.getBody());
+            this.playerObject.destroy();
             Gdx.app.exit();
         }
     }
@@ -126,6 +126,7 @@ public class PlayerSystems {
         this.level++;
         GameScreen.gameStates = GameStatesEnum.PowerUpChoose;
         GameScreen.pauseTime = TimeUtils.nanoTime() * MathUtils.nanoToSec;
+
         GameScreen.powerUpChooseUIStage.addButtons(rolledUpgrades);
     }
 
@@ -145,6 +146,13 @@ public class PlayerSystems {
 
         switch (powerUp){
             case RayCast:
+                break;
+            case FasterReload:
+                if(this.shootingTimeDelta >= this.minimumShootingTime) {
+                    powerUpsList.remove(powerUp);
+                    resultsList.add(powerUp);
+                }
+                break;
             case ShootingPointsUpgrade:
                 powerUpsList.remove(powerUp);
                 resultsList.add(powerUp);
@@ -174,7 +182,11 @@ public class PlayerSystems {
                 break;
             case SpeedUp:
                 this.playerObject.setVELOCITY(this.playerObject.getVELOCITY()+100);
-                if(this.playerObject.getVELOCITY() >= 1000) this.possiblePowerUps.remove(PowerUpsEnum.SpeedUp);
+                if(this.playerObject.getVELOCITY() >= 1000) this.possiblePowerUps.remove(powerUp);
+                break;
+            case FasterReload:
+                this.shootingTimeDelta -= 0.2f;
+                if(this.shootingTimeDelta <= minimumShootingTime) this.possiblePowerUps.remove(powerUp);
                 break;
             case Bullets:
                 actualPowerUps.add(powerUp);

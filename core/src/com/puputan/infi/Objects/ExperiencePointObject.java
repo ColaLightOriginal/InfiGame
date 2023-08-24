@@ -10,10 +10,9 @@ import com.puputan.infi.Utils.MovementUtils;
 
 public class ExperiencePointObject extends BaseObject {
 
-    private float velocity = 75;
+    private float velocity = 125;
     private float movingToPlayerVelocity = 200 + velocity;
     private float movingToPlayerDistanceThreshold = 0.2f;
-    private boolean isAddedToDispose;
     private boolean isMovingToPlayer;
 
     public ExperiencePointObject(Vector2 position) {
@@ -39,18 +38,17 @@ public class ExperiencePointObject extends BaseObject {
         this.getBody().setTransform(this.getX(), this.getY(), 0);
     }
 
+    @Override
+    public void onDestroy() {
+    }
+
     public void validateOutPosition(){
-        if(this.getY() > GameScreen.HEIGHT + this.getHeight()){
-            this.addToDispose(this.getBody());
-        }
+        if(this.getY() > GameScreen.HEIGHT + this.getHeight()) this.destroy();
     }
 
     @Override
     public void onCollision(Fixture fixture) {
         Object ob = fixture.getBody().getUserData();
-        if (ob instanceof PlayerObject && !isAddedToDispose) {
-            this.isAddedToDispose = true;
-            this.addToDispose(getBody());
-        }
+        if (ob instanceof PlayerObject && !this.isAddedToDispose()) this.destroy();
     }
 }
