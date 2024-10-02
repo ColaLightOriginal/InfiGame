@@ -20,6 +20,8 @@ public class GameInputProcessor implements InputProcessor {
             case Input.Keys.ESCAPE:
                 this.screen.pause();
                 return true;
+            case Input.Keys.SPACE:
+                this.playerObject.dash();
         }
         return false;
     }

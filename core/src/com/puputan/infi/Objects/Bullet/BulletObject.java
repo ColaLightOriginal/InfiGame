@@ -3,10 +3,12 @@ package com.puputan.infi.Objects.Bullet;
 import Screens.GameScreen;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.puputan.infi.Configurations.AssetsRepository;
 import com.puputan.infi.Objects.BaseObject;
 import com.puputan.infi.Objects.Enemy.EnemyObject;
 import com.puputan.infi.Objects.ShootingPointObject;
+import com.puputan.infi.Utils.BodyUtils;
 import com.puputan.infi.Utils.MovementUtils;
 import lombok.Getter;
 
@@ -20,6 +22,8 @@ public class BulletObject extends BaseObject {
 
     public BulletObject(ShootingPointObject shootingPointObject, ShootingPointType shootingPointType){
         super(AssetsRepository.bulletTexture);
+
+        BodyUtils.loader.attachFixture(this.getBody(), "Bullet", BodyUtils.getDefaultFixture(), this.getWidth() );
 
         this.moveObjectPosition(shootingPointObject.getPosition());
         this.shootingPointType = shootingPointType;

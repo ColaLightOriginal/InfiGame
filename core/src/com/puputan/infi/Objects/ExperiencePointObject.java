@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.puputan.infi.Configurations.AssetsRepository;
 import com.puputan.infi.Objects.Player.PlayerObject;
+import com.puputan.infi.Utils.BodyUtils;
 import com.puputan.infi.Utils.MovementUtils;
 
 public class ExperiencePointObject extends BaseObject {
@@ -18,6 +19,7 @@ public class ExperiencePointObject extends BaseObject {
     public ExperiencePointObject(Vector2 position) {
         super(AssetsRepository.expTexture);
         GameScreen.gameStage.addActor(this);
+        BodyUtils.createCircleFixture(this);
 
         this.setPosition(position.x, position.y);
         this.getBody().setTransform(this.getY(), this.getY(), 0);

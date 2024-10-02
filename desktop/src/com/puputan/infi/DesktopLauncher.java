@@ -10,6 +10,7 @@ public class DesktopLauncher {
 	public static void main (String[] arg) {
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
 		config.setForegroundFPS(60);
+//		config.setIdleFPS(60);
 		config.setTitle("Infi");
 		config.setWindowedMode((int)GameScreen.WIDTH, (int)GameScreen.HEIGHT);
 		new Lwjgl3Application(new InfiGame(), config);

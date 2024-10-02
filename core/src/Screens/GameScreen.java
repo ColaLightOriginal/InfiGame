@@ -33,7 +33,7 @@ public class GameScreen implements Screen {
     public static Stage gameStage;
     public static PowerUpChooseUIStage powerUpChooseUIStage;
     public static World world;
-
+    
     private final Box2DDebugRenderer debugRenderer;
     public static ArrayList<BulletObject> bulletsList;
     public static ArrayList<EnemyObject> enemiesList;
@@ -78,7 +78,6 @@ public class GameScreen implements Screen {
 
         gameInputProcessor = new GameInputProcessor(playerObject, this);
     }
-
     @Override
     public void show() {
     }
@@ -132,7 +131,6 @@ public class GameScreen implements Screen {
 
     @Override
     public void resume() {
-
     }
 
     @Override

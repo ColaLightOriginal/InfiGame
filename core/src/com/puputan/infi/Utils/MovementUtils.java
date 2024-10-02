@@ -8,7 +8,6 @@ import com.puputan.infi.Objects.BaseObject;
 
 public class MovementUtils {
 
-    private static final float dashDistance = Gdx.graphics.getWidth()*0.1f;
 
     public static Vector2 moveTowardsPoint(Vector2 actualPosition, Vector2 targetPosition, float velocity) {
         float distance = actualPosition.dst(targetPosition);
@@ -48,7 +47,7 @@ public class MovementUtils {
         return (float) Math.sqrt (Math.pow(positionB.x - positionA.x,2) + Math.pow(positionB.y - positionA.y,2));
     }
 
-    public static Vector2 dashToPosition(Vector2 actualPosition, Vector2 destinedPosition){
+    public static Vector2 dashToPosition(Vector2 actualPosition, Vector2 destinedPosition, float dashDistance){
         float distanceBetweenPoints = getDistanceBetweenPoints(actualPosition, destinedPosition);
         Vector2 direction = actualPosition.cpy().sub(destinedPosition).nor();
         direction.set(-direction.x, -direction.y);

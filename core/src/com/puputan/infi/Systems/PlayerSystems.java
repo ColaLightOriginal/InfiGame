@@ -1,4 +1,4 @@
-package com.puputan.infi.Objects.Player;
+package com.puputan.infi.Systems;
 
 import Screens.GameScreen;
 import Screens.GameStatesEnum;
@@ -7,6 +7,8 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.puputan.infi.Objects.Enemy.EnemyObject;
+import com.puputan.infi.Objects.Player.PlayerObject;
+import com.puputan.infi.Objects.Player.PowerUpsEnum;
 import com.puputan.infi.Tools.RaycastCallbackImpl;
 import com.puputan.infi.Objects.Bullet.BulletObject;
 import com.puputan.infi.Objects.Bullet.ShootingPointType;
@@ -52,6 +54,10 @@ public class PlayerSystems {
         this.experienceLevels.put(3, 3000L);
         this.experienceLevels.put(4, 4000L);
         this.experienceLevels.put(5, 5000L);
+        this.experienceLevels.put(6, 10000L);
+        this.experienceLevels.put(7, 20000L);
+        this.experienceLevels.put(8, 25000L);
+        this.experienceLevels.put(9, 100000L);
     }
 
     public void initializePowerUps(){
@@ -135,40 +141,41 @@ public class PlayerSystems {
         LinkedList<PowerUpsEnum> resultPowerUpsList = new LinkedList<>();
 
         for(int i=0; i<3; i++){
-            if(tmpPowerUpsList.size() == 0) return resultPowerUpsList;
-            validatePowerUp(tmpPowerUpsList, resultPowerUpsList, getRandomPowerUp(tmpPowerUpsList));
+            if(tmpPowerUpsList.isEmpty()) return resultPowerUpsList;
+            if(!validatePowerUp(tmpPowerUpsList, resultPowerUpsList, getRandomPowerUp(tmpPowerUpsList))) i++;
         }
         return resultPowerUpsList;
     }
 
-    private void validatePowerUp(LinkedList<PowerUpsEnum> powerUpsList,
+    private boolean validatePowerUp(LinkedList<PowerUpsEnum> powerUpsList,
                                  LinkedList<PowerUpsEnum> resultsList, PowerUpsEnum powerUp){
-
         switch (powerUp){
             case RayCast:
-                break;
+            case ShootingPointsUpgrade:
+                powerUpsList.remove(powerUp);
+                resultsList.add(powerUp);
+                return true;
             case FasterReload:
                 if(this.shootingTimeDelta >= this.minimumShootingTime) {
                     powerUpsList.remove(powerUp);
                     resultsList.add(powerUp);
+                    return true;
                 }
-                break;
-            case ShootingPointsUpgrade:
-                powerUpsList.remove(powerUp);
-                resultsList.add(powerUp);
-                break;
+                return false;
             case SpeedUp:
                 if(this.playerObject.getVELOCITY() <= this.playerObject.getMAX_VELOCITY()){
                     powerUpsList.remove(powerUp);
                     resultsList.add(powerUp);
+                    return true;
                 }
-                break;
+                return false;
             case Bullets:
                 powerUpsList.remove(powerUp);
                 powerUpsList.add(PowerUpsEnum.RayCast);
                 resultsList.add(powerUp);
-                break;
+                return true;
         }
+        return false;
     }
 
     public void activatePowerUp(PowerUpsEnum powerUp){
@@ -182,7 +189,8 @@ public class PlayerSystems {
                 break;
             case SpeedUp:
                 this.playerObject.setVELOCITY(this.playerObject.getVELOCITY()+100);
-                if(this.playerObject.getVELOCITY() >= 1000) this.possiblePowerUps.remove(powerUp);
+                if(this.playerObject.getVELOCITY() >= this.playerObject.getMAX_VELOCITY())
+                    this.possiblePowerUps.remove(powerUp);
                 break;
             case FasterReload:
                 this.shootingTimeDelta -= 0.2f;
